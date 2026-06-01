@@ -1,0 +1,199 @@
+/* fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .center {
+    @apply flex justify-center items-center;
+  }
+  .between {
+    @apply flex justify-between items-center;
+  }
+  .mainBtn {
+    @apply text-gray-100 px-4 py-2 text-lg capitalize transition-all duration-500 ease-in bg-main-color rounded-xl hover:bg-second-color;
+  }
+  .sidebarList {
+    @apply text-white cursor-pointer font-semibold capitalize my-1 px-3 py-2 rounded-md transition-all duration-500 ease-in hover:bg-second-color ;
+  }
+  .titleActive{
+    @apply bg-second-color;
+  }
+
+  .transition-time {
+    @apply transition-all duration-700 ease-in-out;
+  }
+  .bg-main-color {
+    @apply bg-gradient-to-r from-cyan-600 to-sky-900;
+  }
+  .bg-second-color {
+    @apply bg-gradient-to-r from-rose-950 to-rose-600;
+  }
+
+  .imageAnimation{
+    transition-duration: 8s;
+    &:hover{
+      transform: scale(1.25);
+    }
+  }
+
+  .bg-map{
+    background-color: #313041;
+    background-image: url('../image/bg-map-2.png');
+    background-position: bottom right;
+    background-repeat: no-repeat;
+  }
+
+  .btn{
+    @apply me-4 mb-2 font-semibold text-lg hover:text-second-color transition-all ;
+  }
+
+  .btnActive{
+    @apply me-4 mb-2 font-semibold text-lg bg-main-color text-white px-2 py-1 rounded-md;
+  }
+
+
+
+  input#accommodations:checked {
+    background-color: #22c55e; /* bg-green-500 */
+  }
+
+  input#accommodations:checked ~ span:last-child {
+    --tw-translate-x: 1.75rem; /* translate-x-7 */
+  }
+
+  .priceDetails > div:nth-child(odd) {
+    background-color: aliceblue;
+  }
+
+  #separator-sidebar {
+    [type=checkbox], input[type=radio]{
+      color: unset;
+
+    }
+    input[type=range]{
+      &::-webkit-slider-thumb{
+        background-color: #18507b;
+      }
+    }
+  }
+  
+
+  /* footer links*/
+  .itemLink a {
+    position: relative;
+
+    &::after,
+    &::before {
+      content: "";
+      background-color: #fff;
+      height: 2px;
+      width: 0%;
+      position: absolute;
+      left: 50%;
+      bottom: -5px;
+      transition: all 1s;
+    }
+
+    &:hover::after {
+      width: 50%;
+    }
+    &:hover::before {
+      left: 0%;
+      width: 50%;
+    }
+  }
+
+
+}
+
+/* carousel arrow */
+.newsSlider,.teamSlider {
+  position: relative;
+  &:hover .owl-nav{
+    opacity: 1;
+  }
+  .owl-nav{
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    right: -20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transition: all 1s;
+
+    button.owl-prev,button.owl-next{
+      width: 40px;
+      height: 40px;
+      background-color: #0000008d;
+      border-radius: 50%;
+      color: white;
+      font-size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span{
+        padding-bottom: 8px;
+      }
+    }
+  }
+}
+
+
+div[drawer-backdrop]{
+
+  height: 300vh !important;
+  overflow: scroll !important;
+
+}
+
+
+/* about video section */
+.videoBox{
+  position: relative;
+  &::after,&::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #fff;
+    opacity: 0;
+    border-radius: 8px;
+    
+  }
+  &::after{
+    animation: pluse1 2s linear infinite;
+  }
+  &::before{
+    animation: pluse 1.2s linear infinite;
+  }
+}
+
+@keyframes pluse {
+  0%{
+    transform: scale(1);
+    opacity: 1;
+  }
+  100%{
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  
+}
+@keyframes pluse1 {
+  0%{
+    transform: scale(1);
+    opacity: 1;
+  }
+  100%{
+    transform: scale(1.8);
+    opacity: 0;
+  }
+  
+}

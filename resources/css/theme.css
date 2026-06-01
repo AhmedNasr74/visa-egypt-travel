@@ -1,0 +1,41 @@
+.btn-yellow {
+    background: #B29612;
+    border-radius: 20px;
+}
+
+.nav-right-content ul li {
+  padding: 0px 20px;
+}
+
+@media only screen and (max-width: 1550px) {
+    .navbar-area .nav-container .navbar-collapse .navbar-nav li {
+        margin: 0px 4px;
+    }
+
+    nav.navbar.navbar-area.navbar-expand-lg.nav-style-01 {
+        top: 35px;
+    }
+
+    #top-nav {
+        background: linear-gradient(45deg, #E2B74B, white);
+    }
+}
+
+.nav-right-content ul li {
+    padding: 0 26px;
+}
+
+.slick-slide img {
+    min-height: 176px;
+}
+.single-destinations-list .thumb, .slick-slide img {
+    background-color: #c4c4c4;
+}
+.single-destinations-list .details .title {
+    font-weight: 700;
+    min-height: 93px;
+}
+
+.hidden {
+    display: none !important;
+}

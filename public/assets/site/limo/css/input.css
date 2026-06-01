@@ -1,0 +1,314 @@
+/* fonts */
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  :root {
+    --limo-color-primary: #363b5e;
+    --limo-color-primary-alt: #353a56;
+    --limo-color-primary-soft: #3a3f58;
+    --limo-color-accent: #c7b1d8;
+    --limo-color-accent-strong: #9b6bae;
+    --limo-color-accent-text: #7a4a8f;
+    --limo-color-page-bg: #f5f5f7;
+    --limo-color-heading: #2f2f38;
+    --limo-color-subheading: #5a5a63;
+    --limo-color-title: #373744;
+    --limo-color-muted: #6f6f78;
+    --limo-color-info-bg: #e5d9ef;
+    --limo-color-info-text: #575364;
+    --limo-color-play: #a669c6;
+  }
+
+  .center {
+    @apply flex justify-center items-center;
+  }
+  .between {
+    @apply flex justify-between items-center;
+  }
+  .mainBtn {
+    @apply text-gray-100 px-4 py-2 text-lg capitalize transition-all duration-500 ease-in bg-main-color rounded-xl hover:bg-second-color;
+  }
+  .sidebarList {
+    @apply text-white cursor-pointer font-semibold capitalize my-1 px-3 py-2 rounded-md transition-all duration-500 ease-in hover:bg-second-color;
+  }
+  .titleActive {
+    @apply bg-second-color;
+  }
+
+  .transition-time {
+    @apply transition-all duration-700 ease-in-out;
+  }
+  .bg-main-color {
+    @apply bg-gradient-to-r from-cyan-600 to-sky-900;
+  }
+  .bg-second-color {
+    @apply bg-gradient-to-r from-rose-950 to-rose-600;
+  }
+
+  .imageAnimation {
+    transition-duration: 8s;
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+
+  .bg-map {
+    background-color: #313041;
+    background-image: url("../image/bg-map-2.png");
+    background-position: bottom right;
+    background-repeat: no-repeat;
+  }
+
+  .btn {
+    @apply me-4 mb-2 font-semibold text-lg hover:text-second-color transition-all;
+  }
+
+  .btnActive {
+    @apply me-4 mb-2 font-semibold text-lg bg-main-color text-white px-2 py-1 rounded-md;
+  }
+
+  input#accommodations:checked {
+    background-color: #22c55e; /* bg-green-500 */
+  }
+
+  input#accommodations:checked ~ span:last-child {
+    --tw-translate-x: 1.75rem; /* translate-x-7 */
+  }
+
+  .priceDetails > div:nth-child(odd) {
+    background-color: aliceblue;
+  }
+
+  #separator-sidebar {
+    [type="checkbox"],
+    input[type="radio"] {
+      color: unset;
+    }
+    input[type="range"] {
+      &::-webkit-slider-thumb {
+        background-color: #18507b;
+      }
+    }
+  }
+
+  /* footer links*/
+  .itemLink a {
+    position: relative;
+
+    &::after,
+    &::before {
+      content: "";
+      background-color: #fff;
+      height: 2px;
+      width: 0%;
+      position: absolute;
+      left: 50%;
+      bottom: -5px;
+      transition: all 1s;
+    }
+
+    &:hover::after {
+      width: 50%;
+    }
+    &:hover::before {
+      left: 0%;
+      width: 50%;
+    }
+  }
+
+  /* new-home.html — limo hero (stable across Tailwind rebuilds) */
+  .limo-hero-bg {
+    background-color: #000000;
+    background-image: repeating-radial-gradient(
+      circle at 30% 55%,
+      rgba(55, 55, 55, 0.35) 0,
+      rgba(55, 55, 55, 0.35) 1px,
+      transparent 1px,
+      transparent 48px
+    );
+  }
+
+  .limo-font {
+    font-family: "Inter", system-ui, sans-serif;
+  }
+
+  /* new-home.html semantic color helpers */
+  .limo-accent-bg {
+    background-color: var(--limo-color-accent);
+  }
+
+  .limo-primary-bg {
+    background-color: var(--limo-color-primary);
+  }
+
+  .limo-primary-bg-alt {
+    background-color: var(--limo-color-primary-alt);
+  }
+
+  .limo-primary-bg-soft {
+    background-color: var(--limo-color-primary-soft);
+  }
+
+  .limo-page-bg {
+    background-color: var(--limo-color-page-bg);
+  }
+
+  .limo-heading {
+    color: var(--limo-color-heading);
+  }
+
+  .limo-subheading {
+    color: var(--limo-color-subheading);
+  }
+
+  .limo-title {
+    color: var(--limo-color-title);
+  }
+
+  .limo-muted {
+    color: var(--limo-color-muted);
+  }
+
+  .limo-info-bg {
+    background-color: var(--limo-color-info-bg);
+  }
+
+  .limo-info-text {
+    color: var(--limo-color-info-text);
+  }
+
+  .limo-play-bg {
+    background-color: var(--limo-color-play);
+  }
+
+  .limo-play-shadow {
+    box-shadow: 0 10px 22px color-mix(in srgb, var(--limo-color-play) 50%, transparent);
+  }
+
+  .limo-service-card {
+    @apply relative flex cursor-pointer flex-col rounded-lg border border-gray-200 bg-white p-3 transition hover:border-gray-300 sm:p-3.5;
+  }
+
+  .limo-service-card:has(:checked) {
+    border-width: 2px;
+    border-color: var(--limo-color-accent-strong);
+    background-color: #faf8fc;
+  }
+
+  .limo-service-check {
+    background-color: var(--limo-color-accent-strong);
+  }
+
+  .limo-service-card:has(:checked) .limo-service-price {
+    color: var(--limo-color-accent-text);
+  }
+
+  /* native date inputs — used with .limo-date-picker in new-home.html */
+  .limo-date-picker {
+    min-height: 1.35rem;
+    color: inherit;
+    background-color: transparent;
+  }
+
+  .limo-date-picker::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
+
+  /* city dropdown arrow (replaces inline style on select) */
+  .limo-city-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23111'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-position: right 0 center;
+    background-repeat: no-repeat;
+    background-size: 1rem;
+  }
+}
+
+/* carousel arrow */
+.newsSlider,
+.teamSlider {
+  position: relative;
+  &:hover .owl-nav {
+    opacity: 1;
+  }
+  .owl-nav {
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    right: -20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transition: all 1s;
+
+    button.owl-prev,
+    button.owl-next {
+      width: 40px;
+      height: 40px;
+      background-color: #0000008d;
+      border-radius: 50%;
+      color: white;
+      font-size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        padding-bottom: 8px;
+      }
+    }
+  }
+}
+
+div[drawer-backdrop] {
+  height: 300vh !important;
+  overflow: scroll !important;
+}
+
+/* about video section */
+.videoBox {
+  position: relative;
+  &::after,
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #fff;
+    opacity: 0;
+    border-radius: 8px;
+  }
+  &::after {
+    animation: pluse1 2s linear infinite;
+  }
+  &::before {
+    animation: pluse 1.2s linear infinite;
+  }
+}
+
+@keyframes pluse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes pluse1 {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
