@@ -18,7 +18,7 @@
         <div
           class="container relative z-10 mx-auto flex max-w-[1400px] flex-col gap-10 px-5 pb-12 pt-10 lg:flex-row lg:items-end lg:gap-12 lg:pb-16 lg:pt-14 xl:px-8"
         >
-        
+
           <div
             data-aos="fade-right"
             data-aos-delay="120"
@@ -39,7 +39,7 @@
               <h1
                 class=" font-bold leading-tight tracking-tight text-white text-3xl lg:text-[2.65rem] xl:text-5xl"
               >
-                Revealing New Horizons of 
+                Revealing New Horizons of
               </h1>
               <span
                 class="limo-accent-bg mt-2 inline-block rounded-sm px-1 py-0.5 font-bold text-white text-2xl  lg:text-[1.5rem] xl:text-[2rem]"
@@ -259,7 +259,7 @@
                         class="min-w-0 flex-1 border-0 bg-white py-2.5 pe-8 ps-3 text-sm text-gray-800 focus:ring-0"
                       >
                         <option value="">{{ __('site.please_select') }}</option>
-                        @foreach ($limoAirportLocations as $loc)
+                        @foreach ($limoAirportDestinations as $loc)
                         <option value="{{ $loc->id }}">{{ $loc->name }}</option>
                         @endforeach
                       </select>
@@ -778,7 +778,7 @@
                 src="{{ asset('assets/site/limo/image/visa/Visacar2.png') }}"
                 alt="visa Egypt luxury car video cover"
                 class="h-full w-full object-cover "
-                
+
               />
               <button
                 type="button"
@@ -819,7 +819,7 @@
           </div>
 
           <div class="mt-8 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-  
+
   <!-- Standard -->
   <article
     class="text-center"

@@ -6,6 +6,7 @@
     <div class="limo-font antialiased">
         @include('site.limo._new_home_body', [
             'limoAirportLocations' => $limoAirportLocations,
+            'limoAirportDestinations' => $limoAirportDestinations,
             'limoTravelLocations' => $limoTravelLocations,
             'limoCityLocations' => $limoCityLocations,
             'limoHasAirport' => $limoHasAirport,
