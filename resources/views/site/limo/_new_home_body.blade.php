@@ -102,7 +102,7 @@
                     width="24"
                     height="24"
                   />
-                  <span>Airport Visa</span>
+                  <span>Airport Transfer</span>
                 </button>
                 @endif
                 @if ($limoHasTravel)
