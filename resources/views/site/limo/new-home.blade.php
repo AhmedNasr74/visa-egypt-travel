@@ -17,6 +17,7 @@
             'limoTripRouteRules' => $limoTripRouteRules,
             'limoCityRouteRules' => $limoCityRouteRules,
             'limoGlobalMaxPassengers' => $limoGlobalMaxPassengers,
+            'limoLocationLabels' => $limoLocationLabels,
         ])
     </div>
 @endsection
@@ -34,6 +35,7 @@
         window.LIMO_CITY_ROUTE_RULES = @json($limoCityRouteRules ?? []);
         window.LIMO_DEFAULT_TAB = @json($limoDefaultTab ?? 'airport');
         window.LIMO_TRIP_ROUTE_RULES = @json($limoTripRouteRules ?? []);
+        window.LIMO_LOCATION_LABELS = @json($limoLocationLabels ?? []);
         window.LIMO_GLOBAL_MAX_PASSENGERS = @json((int) ($limoGlobalMaxPassengers ?? 50));
         window.LIMO_PRICE_MESSAGES = {
             unavailable: @json(__('site.limo_price_placeholder')),

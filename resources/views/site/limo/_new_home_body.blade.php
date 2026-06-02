@@ -259,9 +259,6 @@
                         class="min-w-0 flex-1 border-0 bg-white py-2.5 pe-8 ps-3 text-sm text-gray-800 focus:ring-0"
                       >
                         <option value="">{{ __('site.please_select') }}</option>
-                        @foreach ($limoAirportDestinations as $loc)
-                        <option value="{{ $loc->id }}">{{ $loc->name }}</option>
-                        @endforeach
                       </select>
                     </div>
                   </div>
@@ -445,9 +442,6 @@
                         class="min-w-0 flex-1 border-0 bg-white py-2.5 pe-2 ps-2 text-sm text-gray-800 focus:ring-0"
                       >
                         <option value="">{{ __('site.please_select') }}</option>
-                        @foreach ($limoTravelLocations as $loc)
-                        <option value="{{ $loc->id }}">{{ $loc->name }}</option>
-                        @endforeach
                       </select>
                     </div>
                   </div>

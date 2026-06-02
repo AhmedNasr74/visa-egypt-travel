@@ -53,8 +53,12 @@
     if (swapBtn && pickupSelect && destSelect) {
         swapBtn.addEventListener("click", function () {
             var a = pickupSelect.value;
-            pickupSelect.value = destSelect.value;
-            destSelect.value = a;
+            var b = destSelect.value;
+            pickupSelect.value = b;
+            refillLinkedDestinationSelect(destSelect, pickupSelect.value, "airport");
+            if (b && destSelect.querySelector('option[value="' + b + '"]')) {
+                destSelect.value = b;
+            }
             pickupSelect.dispatchEvent(new Event("change", { bubbles: true }));
             destSelect.dispatchEvent(new Event("change", { bubbles: true }));
         });
@@ -224,6 +228,66 @@
         limoCityPax.addEventListener("change", syncCityServiceFromRadio);
     }
     syncCityServiceFromRadio();
+
+    /** Destination location ids linked to a pickup in dashboard car routes. */
+    function limoDestinationIdsForPickup(rules, serviceKey, pickupId) {
+        if (!pickupId || !rules || !rules.length) {
+            return [];
+        }
+        var svc = serviceKey === "airport" ? "airport" : "travel";
+        var seen = {};
+        var ids = [];
+        rules.forEach(function (r) {
+            if (!r[svc] || String(r.pickup) !== String(pickupId)) {
+                return;
+            }
+            if (r.dest === null || r.dest === undefined) {
+                return;
+            }
+            var d = String(r.dest);
+            if (!seen[d]) {
+                seen[d] = true;
+                ids.push(Number(r.dest));
+            }
+        });
+        ids.sort(function (a, b) {
+            return a - b;
+        });
+        return ids;
+    }
+
+    function refillLinkedDestinationSelect(selectEl, pickupId, serviceKey) {
+        if (!selectEl) {
+            return;
+        }
+        var rules =
+            typeof window.LIMO_TRIP_ROUTE_RULES === "object" && window.LIMO_TRIP_ROUTE_RULES !== null
+                ? window.LIMO_TRIP_ROUTE_RULES
+                : [];
+        var labels =
+            typeof window.LIMO_LOCATION_LABELS === "object" && window.LIMO_LOCATION_LABELS !== null
+                ? window.LIMO_LOCATION_LABELS
+                : {};
+        var placeholder = selectEl.querySelector('option[value=""]');
+        var placeholderText = placeholder ? placeholder.textContent : "Please select";
+        var prev = selectEl.value;
+        selectEl.innerHTML = "";
+        var emptyOpt = document.createElement("option");
+        emptyOpt.value = "";
+        emptyOpt.textContent = placeholderText;
+        selectEl.appendChild(emptyOpt);
+        limoDestinationIdsForPickup(rules, serviceKey, pickupId).forEach(function (id) {
+            var opt = document.createElement("option");
+            opt.value = String(id);
+            opt.textContent = labels[id] || labels[String(id)] || "Location " + id;
+            selectEl.appendChild(opt);
+        });
+        if (prev && selectEl.querySelector('option[value="' + prev + '"]')) {
+            selectEl.value = prev;
+        } else {
+            selectEl.value = "";
+        }
+    }
 
     /** Match dashboard car routes (pickup + destination) for airport or travel service. */
     function limoMatchingRoutePool(rules, serviceKey, pickupId, destId) {
@@ -444,7 +508,15 @@
             document.dispatchEvent(new CustomEvent("limo-trip-mode-sync", { detail: { group: groupName } }));
         }
         if (pickupSelect) {
-            pickupSelect.addEventListener("change", sync);
+            pickupSelect.addEventListener("change", function () {
+                if (destSelect) {
+                    refillLinkedDestinationSelect(destSelect, pickupSelect.value, serviceKey);
+                }
+                sync();
+            });
+            if (destSelect) {
+                refillLinkedDestinationSelect(destSelect, pickupSelect.value, serviceKey);
+            }
         }
         if (destSelect) {
             destSelect.addEventListener("change", sync);

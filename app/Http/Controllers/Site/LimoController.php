@@ -293,10 +293,17 @@ class LimoController extends Controller
         $limoTripRouteRules = $this->limoTripRouteRules();
         $limoCityRouteRules = $this->limoCityRouteRules();
         $limoGlobalMaxPassengers = $this->maxLimoPassengersGlobal();
+        $limoLocationLabels = $this->limoLocationLabels(
+            $limoAirportLocations,
+            $limoAirportDestinations,
+            $limoTravelLocations,
+            $limoCityLocations
+        );
 
         return view('site.limo.new-home', [
             'limoAirportLocations' => $limoAirportLocations,
             'limoAirportDestinations' => $limoAirportDestinations,
+            'limoLocationLabels' => $limoLocationLabels,
             'limoTravelLocations' => $limoTravelLocations,
             'limoCityLocations' => $limoCityLocations,
             'limoHasAirport' => $limoHasAirport,
@@ -352,6 +359,22 @@ class LimoController extends Controller
             ->filter(fn(CarRoute$cR) => !in_array($cR->destination->id, $pickUpIds))
             ->each(fn(CarRoute $cR) => $locations->push($cR->destination));
         return $locations;
+    }
+
+    /**
+     * @param  Collection<int, \App\Models\Location>  ...$locationSets
+     * @return array<int, string>
+     */
+    private function limoLocationLabels(Collection ...$locationSets): array
+    {
+        $labels = [];
+        foreach ($locationSets as $locations) {
+            foreach ($locations as $location) {
+                $labels[(int)$location->id] = (string)$location->name;
+            }
+        }
+
+        return $labels;
     }
 
     /**
