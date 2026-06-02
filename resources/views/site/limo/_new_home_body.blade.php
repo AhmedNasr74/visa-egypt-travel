@@ -849,9 +849,9 @@
     </div>
     <h3 class="limo-title mt-4 text-[31px] font-semibold">Premium</h3>
     <p class="limo-muted text-sm">
-      Mercedes Benz E-Class, Mercedes Benz C-class, BMW 300 or 500 or similar
+      Toyota ACE 2024 &amp; 2025 or Similar
     </p>
-    <p class="limo-muted text-sm font-semibold">3 Passengers</p>
+    <p class="limo-muted text-sm font-semibold">6 Passengers</p>
   </article>
 
   <!-- Luxury -->
@@ -867,9 +867,9 @@
     </div>
     <h3 class="limo-title mt-4 text-[31px] font-semibold">Luxury</h3>
     <p class="limo-muted text-sm">
-      Mercedes Benz S-class, Maybach, BMW 700 or similar
+      Toyota Coaster 2024 &amp; 2025 or Similar
     </p>
-    <p class="limo-muted text-sm font-semibold">3 Passengers</p>
+    <p class="limo-muted text-sm font-semibold">10 Passengers</p>
   </article>
 
 </div>
