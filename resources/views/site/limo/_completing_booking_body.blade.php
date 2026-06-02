@@ -103,7 +103,17 @@
           Complete Your Booking
         </h1>
         <p id="cb-header-subtitle" class="mt-2 text-center text-sm text-white/85 sm:text-base">
-          One way · Airport limousine
+          @if(($limoPrefill['type'] ?? '') === 'city')
+            @if(!empty($limoPrefill['city_hours_label']))
+              {{ $limoPrefill['city_hours_label'] }} · City ride
+            @else
+              City ride
+            @endif
+          @else
+            {{ ($limoPrefill['trip'] ?? 'one') === 'round' ? 'Round trip' : 'One way' }}
+            ·
+            {{ ($limoPrefill['type'] ?? 'airport') === 'travel' ? 'Travel limousine' : 'Airport limousine' }}
+          @endif
         </p>
       </div>
     </header>

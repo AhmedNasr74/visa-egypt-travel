@@ -114,7 +114,18 @@
         if (!p || typeof p !== "object") {
             return;
         }
-        booking.serviceType = p.type === "travel" || p.type === "city" ? p.type : "airport";
+        if (p.type === "travel" || p.type === "city") {
+            booking.serviceType = p.type;
+        } else if (p.city_hours) {
+            booking.serviceType = "city";
+        } else {
+            booking.serviceType = "airport";
+        }
+        if (booking.serviceType === "city") {
+            booking.tripRound = false;
+        } else {
+            booking.tripRound = p.trip === "round";
+        }
         booking.routePickup = typeof p.pickup_name === "string" ? p.pickup_name : "";
         booking.routeDrop = typeof p.dest_name === "string" ? p.dest_name : "";
         var px = parseInt(p.pax, 10);
@@ -124,7 +135,6 @@
         } else {
             booking.paxCount = 1;
         }
-        booking.tripRound = p.trip === "round";
         if (p.pickup_date) {
             booking.pickupDate = String(p.pickup_date);
         }

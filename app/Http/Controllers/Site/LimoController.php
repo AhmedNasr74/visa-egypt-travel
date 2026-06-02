@@ -34,7 +34,9 @@ class LimoController extends Controller
             }
         }
         $pax = max(1, min($limoMaxPax, (int)$request->query('pax', 1)));
-        $trip = $request->query('trip', 'one') === 'round' ? 'round' : 'one';
+        $trip = $type === 'city'
+            ? ''
+            : ($request->query('trip', 'one') === 'round' ? 'round' : 'one');
         $pickupDate = (string)$request->query('pickup_date', '');
         $returnDate = (string)$request->query('return_date', '');
         $cityHours = (string)$request->query('city_hours', '');

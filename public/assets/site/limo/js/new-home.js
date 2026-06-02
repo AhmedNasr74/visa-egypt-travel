@@ -736,6 +736,9 @@
 
     function limoRedirectWithPrefill(opts) {
         var base = limoCompletingBookingUrl();
+        if (!base) {
+            return;
+        }
         var params = new URLSearchParams();
         params.set("type", opts.type);
         if (opts.pickupId) {
@@ -747,7 +750,9 @@
         if (opts.pax) {
             params.set("pax", String(opts.pax));
         }
-        params.set("trip", opts.tripRound ? "round" : "one");
+        if (opts.type !== "city") {
+            params.set("trip", opts.tripRound ? "round" : "one");
+        }
         if (opts.pickupDate) {
             params.set("pickup_date", opts.pickupDate);
         }

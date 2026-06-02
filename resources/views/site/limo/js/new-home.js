@@ -747,7 +747,9 @@
         if (opts.pax) {
             params.set("pax", String(opts.pax));
         }
-        params.set("trip", opts.tripRound ? "round" : "one");
+        if (opts.type !== "city") {
+            params.set("trip", opts.tripRound ? "round" : "one");
+        }
         if (opts.pickupDate) {
             params.set("pickup_date", opts.pickupDate);
         }
