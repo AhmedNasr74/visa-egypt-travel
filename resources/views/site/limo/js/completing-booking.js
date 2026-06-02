@@ -494,6 +494,15 @@
                             ? window.LIMO_BOOKING_SUCCESS_MSG
                             : "Thank you! Your booking request has been recorded.");
                     limoToast("success", msg);
+                    var homeUrl =
+                        typeof window.LIMO_HOME_URL === "string" && window.LIMO_HOME_URL
+                            ? window.LIMO_HOME_URL
+                            : null;
+                    if (homeUrl) {
+                        window.setTimeout(function () {
+                            window.location.href = homeUrl;
+                        }, 2000);
+                    }
                     return;
                 }
                 var d = result.data || {};

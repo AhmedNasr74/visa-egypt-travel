@@ -19,6 +19,7 @@
     <script>
         window.LIMO_COMPLETING_PREFILL = @json($limoPrefill ?? null);
         window.LIMO_BOOKING_STORE_URL = @json(route('site.limo.complete-booking.store'));
+        window.LIMO_HOME_URL = @json(route('site.limo.home'));
         window.LIMO_BOOKING_SUCCESS_MSG = @json(__('site.limo_booking_recorded'));
     </script>
     <script src="{{ asset('assets/site/limo/js/completing-booking.js') }}"></script>
