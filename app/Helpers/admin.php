@@ -99,6 +99,40 @@ if (!function_exists('footer_text')) {
 }
 
 
+if (!function_exists('admin_notification_emails')) {
+    /**
+     * Admin inboxes for booking and form alerts (contact email + notification list).
+     *
+     * @return list<string>
+     */
+    function admin_notification_emails(): array
+    {
+        $emails = [];
+
+        $contact = setting(SettingKey::CONTACT_EMAIL->value);
+        if (is_array($contact)) {
+            foreach ($contact as $address) {
+                $address = is_string($address) ? trim($address) : '';
+                if ($address !== '' && filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                    $emails[] = $address;
+                }
+            }
+        }
+
+        $notificationList = setting(SettingKey::NOTIFICATION_EMAILS->value);
+        if (is_array($notificationList)) {
+            foreach ($notificationList as $address) {
+                $address = is_string($address) ? trim($address) : '';
+                if ($address !== '' && filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                    $emails[] = $address;
+                }
+            }
+        }
+
+        return array_values(array_unique($emails));
+    }
+}
+
 if (!function_exists('setting')) {
     /**
      * Get setting by key

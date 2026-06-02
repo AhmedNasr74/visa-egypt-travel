@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Mail\LimoBookingAdminMail;
 use App\Models\CarRental;
 use App\Models\CarRoute;
 use App\Models\Currency;
@@ -11,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class LimoController extends Controller
@@ -90,6 +93,28 @@ class LimoController extends Controller
         ];
 
         return view('site.limo.completing-booking', compact('limoPrefill'));
+    }
+
+    private function notifyAdminsOfLimoBooking(CarRental $rental): void
+    {
+        $adminEmails = admin_notification_emails();
+        if ($adminEmails === []) {
+            Log::warning('Limo booking saved but no admin notification email is configured.', [
+                'rental_id' => $rental->id,
+            ]);
+
+            return;
+        }
+
+        try {
+            Mail::to($adminEmails)->send(new LimoBookingAdminMail($rental));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send limo booking admin notification email.', [
+                'rental_id' => $rental->id,
+                'admin_emails' => $adminEmails,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -280,6 +305,9 @@ class LimoController extends Controller
             'currency_id' => $currency?->id,
             'currency_exchange_rate' => $currency !== null ? (float)$currency->exchange_rate : 1.0,
         ]);
+
+        $rental->load(['pickup', 'destination', 'currency']);
+        $this->notifyAdminsOfLimoBooking($rental);
 
         return response()->json([
             'ok' => true,
