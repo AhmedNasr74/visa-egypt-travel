@@ -166,7 +166,7 @@
         if (!isFinite(n) || n <= 0) {
             return "—";
         }
-        return String(Math.round(n)) + " EGP";
+        return "$" + String(Math.round(n));
     }
 
     function syncBookingToDom() {

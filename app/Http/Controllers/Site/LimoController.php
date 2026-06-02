@@ -240,7 +240,8 @@ class LimoController extends Controller
             ? Carbon::parse($validated['return_date'])->format('Y-m-d')
             : null;
 
-        $currency = Currency::query()->where('default', true)->first()
+        $currency = Currency::query()->where('name', 'USD')->first()
+            ?? Currency::query()->where('default', true)->first()
             ?? Currency::query()->first();
 
         $rental = CarRental::query()->create([

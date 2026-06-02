@@ -101,7 +101,7 @@
                                             <div class="form-group row" v-if="tierRowForGroup(0, tier.hours)">
                                                 <label class="col-xl-3 col-md-4">@{{ tier.label }}</label>
                                                 <div class="col-xl-8 col-xl-9">
-                                                    <p class="small text-muted mb-1">Price (EGP) for this city package. “Rounded” price is set to the same value automatically.</p>
+                                                    <p class="small text-muted mb-1">Price (USD) for this city package. “Rounded” price is set to the same value automatically.</p>
                                                     <input type="hidden" :name="'prices['+tierIndexForGroup(0, tier.hours)+'][id]'" :value="tierRowForGroup(0, tier.hours).id">
                                                     <input type="hidden" :name="'prices['+tierIndexForGroup(0, tier.hours)+'][price_group_index]'" value="0">
                                                     <input type="hidden" :name="'prices['+tierIndexForGroup(0, tier.hours)+'][limo_city_hours]'" :value="tier.hours">
@@ -186,7 +186,7 @@
                                                 <div class="form-group row" v-if="tierRowForGroup(prices[bandIdx].price_group_index, tier.hours)">
                                                     <label class="col-xl-3 col-md-4">@{{ tier.label }}</label>
                                                     <div class="col-xl-8 col-xl-9">
-                                                        <p class="small text-muted mb-1">Price (EGP) for this city package. “Rounded” price is set to the same value automatically.</p>
+                                                        <p class="small text-muted mb-1">Price (USD) for this city package. “Rounded” price is set to the same value automatically.</p>
                                                         <input type="hidden" :name="'prices['+tierIndexForGroup(prices[bandIdx].price_group_index, tier.hours)+'][id]'" :value="tierRowForGroup(prices[bandIdx].price_group_index, tier.hours).id">
                                                         <input type="hidden" :name="'prices['+tierIndexForGroup(prices[bandIdx].price_group_index, tier.hours)+'][price_group_index]'" :value="prices[bandIdx].price_group_index">
                                                         <input type="hidden" :name="'prices['+tierIndexForGroup(prices[bandIdx].price_group_index, tier.hours)+'][limo_city_hours]'" :value="tier.hours">

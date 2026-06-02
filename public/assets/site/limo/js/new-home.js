@@ -284,7 +284,7 @@
         if (amount === null || amount === undefined || isNaN(amount)) {
             return "—";
         }
-        return String(Math.round(Number(amount))) + " EGP";
+        return "$" + String(Math.round(Number(amount)));
     }
 
     function limoEstimatePrice(rules, serviceKey, pickupId, destId, paxRaw, isRoundTrip) {

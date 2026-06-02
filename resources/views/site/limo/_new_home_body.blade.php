@@ -656,7 +656,7 @@
                     <p class="text-xs text-gray-500" id="city-hours-label">3 Hours</p>
                     <p class="text-2xl font-bold text-gray-900">
                       <span id="city-price">515</span>
-                      <span class="text-base font-semibold text-gray-700">EGP</span>
+                      <span class="text-base font-semibold text-gray-700">USD</span>
                     </p>
                   </div>
                   <button
