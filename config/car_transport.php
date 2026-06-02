@@ -37,4 +37,15 @@ return [
         '8' => 1180,
         '12' => 1650,
     ],
+
+    'limo_vehicle_image_default' => 'assets/site/limo/image/visa/Visacar5.png',
+
+    'limo_vehicle_image_keywords' => [
+        'luxury' => 'assets/site/limo/image/visa/Visacar4.png',
+        'coaster' => 'assets/site/limo/image/visa/Visacar4.png',
+        'premium' => 'assets/site/limo/image/visa/Visacar1.png',
+        'van' => 'assets/site/limo/image/visa/Visacar1.png',
+        'ace' => 'assets/site/limo/image/visa/Visacar1.png',
+        'standard' => 'assets/site/limo/image/visa/Visacar5.png',
+    ],
 ];

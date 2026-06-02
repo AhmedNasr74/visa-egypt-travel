@@ -128,8 +128,9 @@
           <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:gap-6 sm:p-6">
             <div class="mx-auto w-full max-w-[220px] shrink-0 sm:mx-0 sm:w-44 md:w-52">
               <img
-                src="{{ asset('assets/site/limo/image/visa/Standard.jpg') }}"
-                alt="Standard limousine"
+                id="cb-vehicle-image"
+                src="{{ $limoPrefill['vehicle_image'] ?? asset('assets/site/limo/image/visa/Visacar5.png') }}"
+                alt=""
                 class="h-auto w-full rounded-lg object-cover"
                 width="400"
                 height="260"
@@ -138,8 +139,9 @@
             <div class="min-w-0 flex-1">
               <div class="flex flex-col gap-4 sm:flex-row sm:justify-between">
                 <div>
-                  <h2 id="cb-vehicle-title" class="text-lg font-bold text-slate-900 sm:text-xl">Standard</h2>
-                  <p class="mt-1 text-sm text-slate-500">Toyota, Kia 2021 &amp; 2022, or Similar</p>
+                  <p id="cb-vehicle-description" class="text-sm font-medium text-slate-700 sm:text-base">
+                    {{ $limoPrefill['vehicle_car_type'] ?? '' }}
+                  </p>
                 </div>
                 <div class="text-left sm:text-right">
                   <p class="text-xs font-medium text-slate-500 sm:text-sm" data-bind="trip-price-label">One way trip price</p>
@@ -165,19 +167,6 @@
                       1 Large Bag + 1 Small Bag
                     </span>
                   </div>
-                  <button
-                    type="button"
-                    id="cb-vehicle-gallery-open"
-                    class="inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 font-medium text-blue-600 hover:text-blue-700"
-                  >
-                    <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                      <rect x="3" y="5" width="7" height="7" rx="1" stroke-width="1.5" />
-                      <rect x="14" y="5" width="7" height="7" rx="1" stroke-width="1.5" />
-                      <rect x="3" y="14" width="7" height="7" rx="1" stroke-width="1.5" />
-                      <rect x="14" y="14" width="7" height="7" rx="1" stroke-width="1.5" />
-                    </svg>
-                    Vehicle Gallery
-                  </button>
                 </div>
               </div>
               <div class="mt-4 border-t border-slate-100 pt-3">
@@ -561,118 +550,3 @@
         </section>
       </div>
     </main>
-
-    <!-- Vehicle gallery lightbox -->
-    <div
-      id="cb-vehicle-gallery"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/55 p-4 backdrop-blur-[2px]"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="cb-vehicle-gallery-title"
-      aria-hidden="true"
-    >
-      <div
-        class="relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl"
-        id="cb-vehicle-gallery-panel"
-      >
-        <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3 sm:px-6">
-          <h2 id="cb-vehicle-gallery-title" class="text-lg font-bold text-slate-900">Vehicle Gallery</h2>
-          <button
-            type="button"
-            id="cb-vehicle-gallery-close"
-            class="flex h-10 w-10 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
-            aria-label="Close gallery"
-          >
-            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div class="relative bg-slate-50">
-          <div class="overflow-hidden">
-            <div
-              id="cb-vehicle-gallery-track"
-              class="flex transition-transform duration-300 ease-out will-change-transform"
-              style="transform: translateX(0%)"
-            >
-              <figure class="min-w-full shrink-0 px-2 py-4 sm:px-4 sm:py-6">
-                <img
-                  src="{{ asset('assets/site/limo/image/visa/Standard-gall.png') }}"
-                  alt="Standard class vehicle interior and exterior"
-                  class="mx-auto max-h-[55vh] w-full max-w-full rounded-lg object-contain"
-                  width="1200"
-                  height="800"
-                  loading="lazy"
-                />
-                <figcaption class="mt-2 text-center text-sm font-medium text-slate-600">Standard</figcaption>
-              </figure>
-              <figure class="min-w-full shrink-0 px-2 py-4 sm:px-4 sm:py-6">
-                <img
-                  src="{{ asset('assets/site/limo/image/visa/Premium-gall.png') }}"
-                  alt="Premium class vehicle"
-                  class="mx-auto max-h-[55vh] w-full max-w-full rounded-lg object-contain"
-                  width="1200"
-                  height="800"
-                  loading="lazy"
-                />
-                <figcaption class="mt-2 text-center text-sm font-medium text-slate-600">Premium</figcaption>
-              </figure>
-              <figure class="min-w-full shrink-0 px-2 py-4 sm:px-4 sm:py-6">
-                <img
-                  src="{{ asset('assets/site/limo/image/visa/Premium-Van-gall.png') }}"
-                  alt="Premium van"
-                  class="mx-auto max-h-[55vh] w-full max-w-full rounded-lg object-contain"
-                  width="1200"
-                  height="800"
-                  loading="lazy"
-                />
-                <figcaption class="mt-2 text-center text-sm font-medium text-slate-600">Premium Van</figcaption>
-              </figure>
-              <figure class="min-w-full shrink-0 px-2 py-4 sm:px-4 sm:py-6">
-                <img
-                  src="{{ asset('assets/site/limo/image/visa/Luxury-gall.png') }}"
-                  alt="Luxury class vehicle"
-                  class="mx-auto max-h-[55vh] w-full max-w-full rounded-lg object-contain"
-                  width="1200"
-                  height="800"
-                  loading="lazy"
-                />
-                <figcaption class="mt-2 text-center text-sm font-medium text-slate-600">Luxury</figcaption>
-              </figure>
-              <figure class="min-w-full shrink-0 px-2 py-4 sm:px-4 sm:py-6">
-                <img
-                  src="{{ asset('assets/site/limo/image/visa/eco-luxury-gall.png') }}"
-                  alt="Eco luxury class vehicle"
-                  class="mx-auto max-h-[55vh] w-full max-w-full rounded-lg object-contain"
-                  width="1200"
-                  height="800"
-                  loading="lazy"
-                />
-                <figcaption class="mt-2 text-center text-sm font-medium text-slate-600">Eco Luxury</figcaption>
-              </figure>
-            </div>
-          </div>
-          <button
-            type="button"
-            id="cb-vehicle-gallery-prev"
-            class="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-700 shadow-md transition hover:bg-white sm:left-3 sm:h-11 sm:w-11"
-            aria-label="Previous image"
-          >
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            id="cb-vehicle-gallery-next"
-            class="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-700 shadow-md transition hover:bg-white sm:right-3 sm:h-11 sm:w-11"
-            aria-label="Next image"
-          >
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-        <div id="cb-vehicle-gallery-dots" class="flex flex-wrap items-center justify-center gap-2 border-t border-slate-100 px-4 py-3"></div>
-      </div>
-    </div>

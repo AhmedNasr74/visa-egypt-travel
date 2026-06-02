@@ -26,6 +26,8 @@
         paxCount: 1,
         tripRound: false,
         vehiclePriceEgp: null,
+        vehicleCarType: "",
+        vehicleImage: "",
         serviceType: "airport",
         cityHours: "",
         cityHoursLabel: "",
@@ -137,6 +139,9 @@
                 booking.vehiclePriceEgp = Math.round(pr);
             }
         }
+        booking.vehicleCarType =
+            typeof p.vehicle_car_type === "string" ? p.vehicle_car_type.trim() : "";
+        booking.vehicleImage = typeof p.vehicle_image === "string" ? p.vehicle_image : "";
         if (!booking.pickupDate) {
             booking.pickupDate = todayIso();
         }
@@ -222,10 +227,28 @@
             }
         });
 
-        var tripLbl = booking.tripRound ? "Round trip price" : "One way trip price";
+        var tripLbl = "Trip price";
+        if (booking.serviceType === "city") {
+            tripLbl = booking.cityHoursLabel || "City ride price";
+        } else if (booking.tripRound) {
+            tripLbl = "Round trip price";
+        } else {
+            tripLbl = "One way trip price";
+        }
         $all("[data-bind='trip-price-label']").forEach(function (el) {
             el.textContent = tripLbl;
         });
+
+        var imgEl = $("#cb-vehicle-image");
+        if (imgEl && booking.vehicleImage) {
+            imgEl.src = booking.vehicleImage;
+            imgEl.alt = booking.vehicleCarType || "";
+        }
+        var descEl = $("#cb-vehicle-description");
+        if (descEl) {
+            descEl.textContent = booking.vehicleCarType || "";
+            descEl.classList.toggle("hidden", !booking.vehicleCarType);
+        }
 
         var priceText = booking.vehiclePriceEgp != null ? formatEgp(booking.vehiclePriceEgp) : "—";
         $all("[data-bind='vehicle-price']").forEach(function (el) {
@@ -245,8 +268,14 @@
                 city: "City ride"
             };
             var t1 = typeLine[booking.serviceType] || "Limo";
-            var t2 = booking.tripRound ? "Round trip" : "One way";
-            sub.textContent = t2 + " · " + t1;
+            if (booking.serviceType === "city") {
+                sub.textContent = booking.cityHoursLabel
+                    ? booking.cityHoursLabel + " · " + t1
+                    : t1;
+            } else {
+                var t2 = booking.tripRound ? "Round trip" : "One way";
+                sub.textContent = t2 + " · " + t1;
+            }
         }
 
         $all("[data-bind='summary-pickup-line']").forEach(function (el) {
@@ -409,10 +438,9 @@
         if (!booking.pickupDate) {
             return { error: "Please choose a pickup date." };
         }
-        var vehicleTitleEl = $("#cb-vehicle-title");
         var carType =
-            vehicleTitleEl && vehicleTitleEl.textContent
-                ? vehicleTitleEl.textContent.replace(/\s+/g, " ").trim()
+            booking.vehicleCarType && booking.vehicleCarType.trim()
+                ? booking.vehicleCarType.trim()
                 : null;
         var notesEl = $("#cb-booking-notes");
         var guestNotes = notesEl ? notesEl.value.trim() : "";
@@ -806,130 +834,6 @@
         }
     }
 
-    var vehicleGalleryIndex = 0;
-    var vehicleGallerySlideCount = 0;
-
-    function vehicleGalleryUpdateTrack() {
-        var track = $("#cb-vehicle-gallery-track");
-        if (!track) return;
-        track.style.transform = "translateX(-" + vehicleGalleryIndex * 100 + "%)";
-
-        var dots = $("#cb-vehicle-gallery-dots");
-        if (!dots) return;
-        var dotBase =
-            "rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ";
-        $all("[data-cb-gallery-dot]", dots).forEach(function (btn, i) {
-            var on = i === vehicleGalleryIndex;
-            btn.className =
-                dotBase +
-                (on ? "h-2.5 w-6 bg-blue-600" : "h-2 w-2 bg-slate-300 hover:bg-slate-400");
-            btn.setAttribute("aria-current", on ? "true" : "false");
-        });
-    }
-
-    function vehicleGalleryGo(delta) {
-        if (vehicleGallerySlideCount < 1) return;
-        vehicleGalleryIndex =
-            (vehicleGalleryIndex + delta + vehicleGallerySlideCount) % vehicleGallerySlideCount;
-        vehicleGalleryUpdateTrack();
-    }
-
-    function vehicleGalleryOpen() {
-        var layer = $("#cb-vehicle-gallery");
-        if (!layer) return;
-        vehicleGalleryIndex = 0;
-        vehicleGalleryUpdateTrack();
-        layer.classList.remove("hidden");
-        layer.classList.add("flex");
-        layer.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
-        var closeBtn = $("#cb-vehicle-gallery-close");
-        if (closeBtn) closeBtn.focus();
-    }
-
-    function vehicleGalleryClose() {
-        var layer = $("#cb-vehicle-gallery");
-        if (!layer) return;
-        layer.classList.add("hidden");
-        layer.classList.remove("flex");
-        layer.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-        var openBtn = $("#cb-vehicle-gallery-open");
-        if (openBtn) openBtn.focus();
-    }
-
-    function initVehicleGallery() {
-        var track = $("#cb-vehicle-gallery-track");
-        var dotsWrap = $("#cb-vehicle-gallery-dots");
-        if (!track || !dotsWrap) return;
-        vehicleGallerySlideCount = track.querySelectorAll("figure").length;
-        dotsWrap.innerHTML = "";
-        for (var i = 0; i < vehicleGallerySlideCount; i++) {
-            (function (idx) {
-                var dot = document.createElement("button");
-                dot.type = "button";
-                dot.setAttribute("data-cb-gallery-dot", "");
-                dot.setAttribute("aria-label", "Show image " + (idx + 1));
-                dot.addEventListener("click", function () {
-                    vehicleGalleryIndex = idx;
-                    vehicleGalleryUpdateTrack();
-                });
-                dotsWrap.appendChild(dot);
-            })(i);
-        }
-        vehicleGalleryUpdateTrack();
-
-        var openBtn = $("#cb-vehicle-gallery-open");
-        var closeBtn = $("#cb-vehicle-gallery-close");
-        var prevBtn = $("#cb-vehicle-gallery-prev");
-        var nextBtn = $("#cb-vehicle-gallery-next");
-        var panel = $("#cb-vehicle-gallery-panel");
-        var layer = $("#cb-vehicle-gallery");
-
-        if (openBtn) {
-            openBtn.addEventListener("click", function () {
-                vehicleGalleryOpen();
-            });
-        }
-        if (closeBtn) {
-            closeBtn.addEventListener("click", function () {
-                vehicleGalleryClose();
-            });
-        }
-        if (prevBtn) {
-            prevBtn.addEventListener("click", function () {
-                vehicleGalleryGo(-1);
-            });
-        }
-        if (nextBtn) {
-            nextBtn.addEventListener("click", function () {
-                vehicleGalleryGo(1);
-            });
-        }
-        if (layer) {
-            layer.addEventListener("click", function (e) {
-                if (e.target === layer) vehicleGalleryClose();
-            });
-        }
-        if (panel) {
-            panel.addEventListener("click", function (e) {
-                e.stopPropagation();
-            });
-        }
-
-        document.addEventListener("keydown", function (e) {
-            if (!layer || layer.classList.contains("hidden")) return;
-            if (e.key === "Escape") {
-                e.preventDefault();
-                vehicleGalleryClose();
-            } else if (e.key === "ArrowLeft") {
-                vehicleGalleryGo(-1);
-            } else if (e.key === "ArrowRight") {
-                vehicleGalleryGo(1);
-            }
-        });
-    }
-
     function onSendPassenger() {
         var name = $("#cb-contact-name");
         var email = $("#cb-contact-email");
@@ -1052,7 +956,6 @@
 
         syncBookingToDom();
         showScreen(isCityRide() ? 3 : 1);
-        initVehicleGallery();
         if (window.AOS && typeof window.AOS.init === "function") {
             window.AOS.init({
                 duration: 700,

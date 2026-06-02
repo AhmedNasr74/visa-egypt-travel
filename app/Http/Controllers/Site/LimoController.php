@@ -59,6 +59,16 @@ class LimoController extends Controller
             $destName = (string)(Location::active()->find($destId)?->name ?? '');
         }
 
+        $vehicle = $this->resolveLimoVehicleForBooking(
+            $type,
+            $pickupId,
+            $destId,
+            $pax,
+            $trip === 'round',
+            $cityHoursKey,
+            $estimatedPrice
+        );
+
         $limoPrefill = [
             'type' => $type,
             'pickup_id' => $pickupId,
@@ -73,6 +83,8 @@ class LimoController extends Controller
             'city_hours_label' => $cityHoursLabel,
             'estimated_price' => $estimatedPrice,
             'max_pax' => $limoMaxPax,
+            'vehicle_car_type' => $vehicle['car_type'],
+            'vehicle_image' => $vehicle['image'],
         ];
 
         return view('site.limo.completing-booking', compact('limoPrefill'));
@@ -183,6 +195,7 @@ class LimoController extends Controller
                                 'group' => (int)$p->price_group_index,
                                 'hours' => $hours !== null ? (string)$hours : '',
                                 'ow' => round((float)$p->oneway_price, 2),
+                                'car_type' => (string)($p->car_type ?? ''),
                             ];
                         })
                         ->filter(fn(array $row) => $row['hours'] !== '')
@@ -428,10 +441,191 @@ class LimoController extends Controller
                             'to' => (int)$p->to,
                             'ow' => round((float)$p->oneway_price, 2),
                             'rt' => round((float)$p->rounded_price, 2),
+                            'car_type' => (string)($p->car_type ?? ''),
                         ])->values()->all(),
                 ];
             })
             ->values()
             ->all();
+    }
+
+    /**
+     * @return array{car_type: string, image: string}
+     */
+    private function resolveLimoVehicleForBooking(
+        string $type,
+        int $pickupId,
+        ?int $destId,
+        int $pax,
+        bool $isRoundTrip,
+        string $cityHours,
+        ?float $estimatedPrice
+    ): array {
+        $carType = '';
+
+        if ($type === 'city' && $pickupId > 0 && $cityHours !== '') {
+            $carType = $this->resolveCityRideCarType($pickupId, $pax, $cityHours, $estimatedPrice);
+        } elseif ($pickupId > 0 && in_array($type, ['airport', 'travel'], true)) {
+            $carType = $this->resolveTripCarType($type, $pickupId, $destId, $pax, $isRoundTrip, $estimatedPrice);
+        }
+
+        return [
+            'car_type' => $carType,
+            'image' => $this->limoVehicleImageUrl($carType),
+        ];
+    }
+
+    private function resolveTripCarType(
+        string $type,
+        int $pickupId,
+        ?int $destId,
+        int $pax,
+        bool $isRoundTrip,
+        ?float $estimatedPrice
+    ): string {
+        $pool = $this->matchingTripRoutePool($this->limoTripRouteRules(), $type, $pickupId, $destId);
+        $candidates = [];
+
+        foreach ($pool as $route) {
+            foreach ($route['prices'] as $tier) {
+                if ($pax < $tier['from'] || $pax > $tier['to']) {
+                    continue;
+                }
+                $amount = $isRoundTrip ? $tier['rt'] : $tier['ow'];
+                if ($amount <= 0) {
+                    continue;
+                }
+                $candidates[] = [
+                    'price' => round((float)$amount, 2),
+                    'car_type' => (string)($tier['car_type'] ?? ''),
+                ];
+            }
+        }
+
+        return $this->pickCarTypeFromPriceCandidates($candidates, $estimatedPrice);
+    }
+
+    private function resolveCityRideCarType(
+        int $pickupId,
+        int $pax,
+        string $cityHours,
+        ?float $estimatedPrice
+    ): string {
+        $candidates = [];
+
+        foreach ($this->limoCityRouteRules() as $route) {
+            if ((int)$route['pickup'] !== $pickupId) {
+                continue;
+            }
+            $bands = $route['bands'];
+            if ($bands === [] && $route['city_prices'] !== []) {
+                $bands = [['group' => $route['city_prices'][0]['group'], 'from' => 1, 'to' => 50, 'car_type' => '']];
+            }
+            foreach ($bands as $band) {
+                if ($pax < $band['from'] || $pax > $band['to']) {
+                    continue;
+                }
+                foreach ($route['city_prices'] as $package) {
+                    if ((int)$package['group'] !== (int)$band['group'] || (string)$package['hours'] !== $cityHours) {
+                        continue;
+                    }
+                    if ($package['ow'] <= 0) {
+                        continue;
+                    }
+                    $candidates[] = [
+                        'price' => round((float)$package['ow'], 2),
+                        'car_type' => (string)($package['car_type'] ?: $band['car_type']),
+                    ];
+                }
+            }
+        }
+
+        return $this->pickCarTypeFromPriceCandidates($candidates, $estimatedPrice);
+    }
+
+    /**
+     * @param  list<array{pickup: int, dest: int|null, airport: bool, travel: bool, prices: list<array{from: int, to: int, ow: float, rt: float, car_type: string}>}>  $rules
+     * @return list<array{pickup: int, dest: int|null, airport: bool, travel: bool, prices: list<array{from: int, to: int, ow: float, rt: float, car_type: string}>}>
+     */
+    private function matchingTripRoutePool(array $rules, string $type, int $pickupId, ?int $destId): array
+    {
+        $svc = $type === 'airport' ? 'airport' : 'travel';
+        $candidates = array_values(array_filter(
+            $rules,
+            fn(array $r) => $r[$svc] && (int)$r['pickup'] === $pickupId
+        ));
+
+        if ($candidates === []) {
+            return [];
+        }
+
+        if ($destId === null || $destId < 1) {
+            return array_values(array_filter(
+                $candidates,
+                fn(array $r) => $r['dest'] === null
+            ));
+        }
+
+        $exact = array_values(array_filter(
+            $candidates,
+            fn(array $r) => $r['dest'] !== null && (int)$r['dest'] === $destId
+        ));
+
+        if ($exact !== []) {
+            return $exact;
+        }
+
+        return array_values(array_filter(
+            $candidates,
+            fn(array $r) => $r['dest'] === null
+        ));
+    }
+
+    /**
+     * @param  list<array{price: float, car_type: string}>  $candidates
+     */
+    private function pickCarTypeFromPriceCandidates(array $candidates, ?float $estimatedPrice): string
+    {
+        if ($candidates === []) {
+            return '';
+        }
+
+        if ($estimatedPrice !== null && $estimatedPrice > 0) {
+            $target = round($estimatedPrice, 2);
+            foreach ($candidates as $row) {
+                if ($row['price'] === $target && $row['car_type'] !== '') {
+                    return $row['car_type'];
+                }
+            }
+        }
+
+        $minPrice = min(array_column($candidates, 'price'));
+        foreach ($candidates as $row) {
+            if ($row['price'] === $minPrice && $row['car_type'] !== '') {
+                return $row['car_type'];
+            }
+        }
+
+        return (string)($candidates[0]['car_type'] ?? '');
+    }
+
+    private function limoVehicleImageUrl(string $carType): string
+    {
+        $default = (string)config(
+            'car_transport.limo_vehicle_image_default',
+            'assets/site/limo/image/visa/Visacar5.png'
+        );
+        $keywords = config('car_transport.limo_vehicle_image_keywords', []);
+        $haystack = strtolower($carType);
+
+        if (is_array($keywords)) {
+            foreach ($keywords as $keyword => $path) {
+                if ($keyword !== '' && str_contains($haystack, strtolower((string)$keyword))) {
+                    return asset((string)$path);
+                }
+            }
+        }
+
+        return asset($default);
     }
 }
