@@ -89,6 +89,33 @@
         return { base: t - vat, vat: vat, total: t };
     }
 
+    function isCityRide() {
+        return booking.serviceType === "city";
+    }
+
+    function applyServiceTypeUi() {
+        var isCity = isCityRide();
+        $all("[data-cb-flight-only]").forEach(function (el) {
+            el.classList.toggle("hidden", isCity);
+            el.hidden = isCity;
+        });
+        $all("[data-cb-city-only]").forEach(function (el) {
+            el.classList.toggle("hidden", !isCity);
+            el.hidden = !isCity;
+        });
+        var step1Label = $("#cb-step1-label");
+        if (step1Label) {
+            step1Label.textContent = isCity ? "Trip Details" : "Flight Details";
+        }
+        var step1Item = document.querySelector('[data-cb-step-index="1"] [role="listitem"]');
+        if (step1Item) {
+            step1Item.setAttribute(
+                "aria-label",
+                isCity ? "Step 1 Trip Details" : "Step 1 Flight Details"
+            );
+        }
+    }
+
     function applyLimoPrefillFromServer() {
         var p = window.LIMO_COMPLETING_PREFILL;
         if (!p || typeof p !== "object") {
@@ -170,15 +197,17 @@
     }
 
     function syncBookingToDom() {
-        $all("[data-bind='flight-number']").forEach(function (el) {
-            el.textContent = booking.flightNumber || "—";
-        });
-        $all("[data-bind='airline']").forEach(function (el) {
-            el.textContent = booking.airline || "—";
-        });
-        $all("[data-bind='terminal']").forEach(function (el) {
-            el.textContent = booking.terminal || "—";
-        });
+        if (!isCityRide()) {
+            $all("[data-bind='flight-number']").forEach(function (el) {
+                el.textContent = booking.flightNumber || "—";
+            });
+            $all("[data-bind='airline']").forEach(function (el) {
+                el.textContent = booking.airline || "—";
+            });
+            $all("[data-bind='terminal']").forEach(function (el) {
+                el.textContent = booking.terminal || "—";
+            });
+        }
         $all("[data-bind='pickup-datetime']").forEach(function (el) {
             el.textContent =
                 formatLongDate(booking.pickupDate) +
@@ -257,10 +286,12 @@
             el.textContent = split.total > 0 ? formatEgp(split.total) : "—";
         });
 
-        var pn = $("#cb-summary-flight-num");
-        if (pn) pn.textContent = booking.flightNumber || "—";
-        var pa = $("#cb-summary-airline");
-        if (pa) pa.textContent = booking.airline || "—";
+        if (!isCityRide()) {
+            var pn = $("#cb-summary-flight-num");
+            if (pn) pn.textContent = booking.flightNumber || "—";
+            var pa = $("#cb-summary-airline");
+            if (pa) pa.textContent = booking.airline || "—";
+        }
 
         var uiName = $("#cb-display-name");
         var uiEmail = $("#cb-display-email");
@@ -286,19 +317,21 @@
     }
 
     function readBookingFromForm() {
-        var fn1 = flightInputPage1 && flightInputPage1.value.trim();
-        var fn2 = flightInputPage2 && flightInputPage2.value.trim();
-        if (fn1) booking.flightNumber = fn1;
-        if (fn2) booking.flightNumber = fn2;
+        if (!isCityRide()) {
+            var fn1 = flightInputPage1 && flightInputPage1.value.trim();
+            var fn2 = flightInputPage2 && flightInputPage2.value.trim();
+            if (fn1) booking.flightNumber = fn1;
+            if (fn2) booking.flightNumber = fn2;
 
-        var airlineEl = $("#cb-airline");
-        if (airlineEl) booking.airline = airlineEl.value.trim();
+            var airlineEl = $("#cb-airline");
+            if (airlineEl) booking.airline = airlineEl.value.trim();
+
+            var termEl = $("#cb-terminal");
+            if (termEl) booking.terminal = termEl.value;
+        }
 
         var timeEl = $("#cb-pickup-time");
         if (timeEl) booking.pickupTime = timeEl.value;
-
-        var termEl = $("#cb-terminal");
-        if (termEl) booking.terminal = termEl.value;
 
         var dateEl = $("#cb-pickup-date");
         if (dateEl && dateEl.value) booking.pickupDate = dateEl.value;
@@ -339,14 +372,16 @@
         if (p.city_hours_label) {
             lines.push("City package: " + p.city_hours_label);
         }
-        if (booking.flightNumber) {
-            lines.push("Flight number: " + booking.flightNumber);
-        }
-        if (booking.airline) {
-            lines.push("Airline: " + booking.airline);
-        }
-        if (booking.terminal) {
-            lines.push("Terminal: " + booking.terminal);
+        if (!isCityRide()) {
+            if (booking.flightNumber) {
+                lines.push("Flight number: " + booking.flightNumber);
+            }
+            if (booking.airline) {
+                lines.push("Airline: " + booking.airline);
+            }
+            if (booking.terminal) {
+                lines.push("Terminal: " + booking.terminal);
+            }
         }
         if (booking.address) {
             lines.push("Drop-off address: " + booking.address);
@@ -532,7 +567,9 @@
     function updateBackVisibility() {
         var back = $("#cb-back");
         if (!back) return;
-        var hide = currentScreen === 1 && passengerPhase === "form";
+        var hide =
+            (currentScreen === 1 && passengerPhase === "form") ||
+            (isCityRide() && currentScreen === 3 && passengerPhase === "form");
         back.classList.toggle("invisible", hide);
         back.setAttribute("aria-hidden", hide ? "true" : "false");
         back.disabled = hide;
@@ -590,7 +627,23 @@
         var s3 = "upcoming";
         var s4 = "upcoming";
 
-        if (currentScreen === 1) {
+        if (isCityRide()) {
+            if (currentScreen === 3) {
+                s1 = "active";
+            } else if (currentScreen === 5 && passengerPhase === "form") {
+                s1 = "done";
+                s2 = "active";
+            } else if (currentScreen === 5) {
+                s1 = "done";
+                s2 = "done";
+                s3 = "active";
+            } else if (currentScreen === 6) {
+                s1 = "done";
+                s2 = "done";
+                s3 = "done";
+                s4 = "active";
+            }
+        } else if (currentScreen === 1) {
             s1 = "active";
         } else if (currentScreen === 2 || currentScreen === 3) {
             s1 = "done";
@@ -658,6 +711,21 @@
 
     function goNext() {
         readBookingFromDom();
+
+        if (isCityRide()) {
+            if (currentScreen === 3) {
+                readBookingFromForm();
+                passengerPhase = "form";
+                showScreen(5);
+                return;
+            }
+            if (currentScreen === 4) {
+                readBookingFromForm();
+                passengerPhase = "form";
+                showScreen(5);
+                return;
+            }
+        }
 
         if (currentScreen === 1) {
             var v = flightInputPage1 ? flightInputPage1.value.trim() : "";
@@ -730,7 +798,11 @@
             return;
         }
         if (currentScreen === 5 && passengerPhase === "form") {
-            showScreen(4);
+            showScreen(isCityRide() ? 3 : 4);
+            return;
+        }
+        if (isCityRide() && currentScreen === 4) {
+            showScreen(3);
             return;
         }
         if (currentScreen > 1) {
@@ -905,6 +977,7 @@
 
     function init() {
         applyLimoPrefillFromServer();
+        applyServiceTypeUi();
 
         pages = $all("[data-cb-page]");
         flightInputPage1 = $("#cb-flight-input-1");
@@ -982,7 +1055,7 @@
         });
 
         syncBookingToDom();
-        showScreen(1);
+        showScreen(isCityRide() ? 3 : 1);
         initVehicleGallery();
         if (window.AOS && typeof window.AOS.init === "function") {
             window.AOS.init({

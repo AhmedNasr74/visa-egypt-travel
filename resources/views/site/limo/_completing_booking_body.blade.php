@@ -29,7 +29,7 @@
                   />
                 </svg>
               </div>
-              <p data-step-label class="mt-2 max-w-[4.5rem] text-center text-[10px] font-medium leading-tight text-violet-200 sm:max-w-[5.5rem] sm:text-xs">
+              <p id="cb-step1-label" data-step-label class="mt-2 max-w-[4.5rem] text-center text-[10px] font-medium leading-tight text-violet-200 sm:max-w-[5.5rem] sm:text-xs">
                 Flight Details
               </p>
             </div>
@@ -190,8 +190,8 @@
           </div>
         </article>
 
-        <!-- 1: Flight number -->
-        <section data-cb-page="1" class="mt-4 sm:mt-6" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">
+        <!-- 1: Flight number (airport / travel only) -->
+        <section data-cb-page="1" data-cb-flight-only class="mt-4 sm:mt-6" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">
           <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
             <label for="cb-flight-input-1" class="block text-sm font-semibold text-slate-900 sm:text-base">
               Enter Arrival Flight Number
@@ -216,8 +216,8 @@
           </div>
         </section>
 
-        <!-- 2: Flight number + error state -->
-        <section data-cb-page="2" class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="120">
+        <!-- 2: Flight number + error state (airport / travel only) -->
+        <section data-cb-page="2" data-cb-flight-only class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="120">
           <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
             <label for="cb-flight-input-2" class="block text-sm font-semibold text-slate-900 sm:text-base">
               Enter Arrival Flight Number
@@ -249,21 +249,21 @@
         <section data-cb-page="3" class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="140">
           <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
             <div class="flex flex-col gap-2 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
-              <h2 class="text-base font-bold text-slate-900 sm:text-lg">Flight Details</h2>
+              <h2 data-cb-flight-only class="text-base font-bold text-slate-900 sm:text-lg">Flight Details</h2>
+              <h2 data-cb-city-only class="hidden text-base font-bold text-slate-900 sm:text-lg">Trip Details</h2>
               <p class="text-xs text-slate-600 sm:text-sm">
                 <span class="font-medium" data-bind="route-pickup">—</span>
                 <span class="mx-1 text-slate-400" aria-hidden="true">→</span>
                 <span class="font-medium" data-bind="route-drop">—</span>
               </p>
             </div>
-            <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div data-cb-flight-only class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p class="text-sm text-slate-800">
                 Flight Number : <span class="font-semibold" data-bind="flight-number">—</span>
               </p>
-              <!-- <button type="button" class="text-sm font-medium text-blue-600 underline">Change Flight Number</button> -->
             </div>
             <div class="mt-6 space-y-4">
-              <div>
+              <div data-cb-flight-only>
                 <label for="cb-airline" class="block text-sm font-semibold text-slate-800">Airline</label>
                 <input
                   id="cb-airline"
@@ -296,7 +296,7 @@
                     </select>
                   </div>
                 </div>
-                <div>
+                <div data-cb-flight-only>
                   <label for="cb-terminal" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Terminal</label>
                   <select
                     id="cb-terminal"
@@ -339,8 +339,8 @@
           </div>
         </section>
 
-        <!-- 4: Address + read-only flight box -->
-        <section data-cb-page="4" class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="160">
+        <!-- 4: Address + read-only flight box (airport / travel only) -->
+        <section data-cb-page="4" data-cb-flight-only class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="160">
           <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
             <div class="flex flex-col gap-2 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
               <h2 class="text-base font-bold text-slate-900 sm:text-lg">Flight Details</h2>
@@ -353,7 +353,6 @@
             <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
               <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <h3 class="text-sm font-bold text-slate-900">Flight Details</h3>
-                <!-- <button type="button" class="text-sm font-medium text-blue-600 underline">Change Flight Number</button> -->
               </div>
               <ul class="mt-3 space-y-1.5 text-sm text-slate-700">
                 <li>Flight Number: <span id="cb-summary-flight-num" class="font-medium">—</span></li>
