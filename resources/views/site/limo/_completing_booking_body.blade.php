@@ -505,19 +505,9 @@
                 </div>
                 <p class="text-xs text-slate-500"><span data-bind="summary-drop-heading">Drop-off</span>: <span data-bind="summary-drop-title">—</span><span data-bind="summary-drop-sub" class="text-slate-500"></span></p>
               </div>
-              <div class="mt-6 space-y-2 border-t border-slate-100 pt-4 text-sm">
-                <div class="flex justify-between text-emerald-600">
-                  <span data-bind="trip-price-label">One way trip price</span>
-                  <span class="font-semibold" data-bind="price-before-vat">—</span>
-                </div>
-                <div class="flex justify-between text-slate-600">
-                  <span>Vat 14%:</span>
-                  <span data-bind="price-vat">—</span>
-                </div>
-                <div class="flex justify-between text-base font-bold text-emerald-600">
-                  <span>final price:</span>
-                  <span data-bind="price-total">—</span>
-                </div>
+              <div class="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
+                <span class="text-base font-bold text-slate-900">Final price</span>
+                <span class="text-lg font-bold text-emerald-600" data-bind="price-total">—</span>
               </div>
             </div>
 

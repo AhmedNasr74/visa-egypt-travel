@@ -80,15 +80,6 @@
         return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
     }
 
-    function splitVatFromInclusive(total) {
-        var t = Math.round(Number(total));
-        if (!isFinite(t) || t <= 0) {
-            return { base: 0, vat: 0, total: 0 };
-        }
-        var vat = Math.round((t * 14) / 114);
-        return { base: t - vat, vat: vat, total: t };
-    }
-
     function isCityRide() {
         return booking.serviceType === "city";
     }
@@ -275,15 +266,11 @@
             }
         });
 
-        var split = splitVatFromInclusive(booking.vehiclePriceEgp || 0);
-        $all("[data-bind='price-before-vat']").forEach(function (el) {
-            el.textContent = split.total > 0 ? formatEgp(split.base) : "—";
-        });
-        $all("[data-bind='price-vat']").forEach(function (el) {
-            el.textContent = split.total > 0 ? formatEgp(split.vat) : "—";
-        });
         $all("[data-bind='price-total']").forEach(function (el) {
-            el.textContent = split.total > 0 ? formatEgp(split.total) : "—";
+            el.textContent =
+                booking.vehiclePriceEgp != null && booking.vehiclePriceEgp > 0
+                    ? formatEgp(booking.vehiclePriceEgp)
+                    : "—";
         });
 
         if (!isCityRide()) {
