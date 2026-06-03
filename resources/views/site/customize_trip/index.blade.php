@@ -8,6 +8,9 @@
             border-radius: 15px;
             padding: 3px;
         }
+        #custom-trip .is-invalid {
+            border-color: #dc3545 !important;
+        }
     </style>
 @endpush
 @section('content')
@@ -18,6 +21,8 @@
         <section id="step-1" style="" class="">
             <div class="container">
                 <h2 class="text-center fs-1 fw-bold my-5 text-headerColor">{{ __('site.tour') }}</h2>
+
+                <div id="custom-trip-alert" class="alert alert-danger d-none" role="alert"></div>
 
                 <div class="row">
                     <div class="col-12 col-md-6 mb-2">
@@ -149,7 +154,7 @@
                                     type="tel"
                                     class="form-control w-100"
                                     name="phone"
-                                    placeholder={{ __('site.phone') }}
+                                    placeholder="{{ __('site.phone') }}"
                                     id="userPhone"
                                     required
                                     value="{{ old('phone') }}"
@@ -307,7 +312,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between my-5">
-                    <button id="inquire" type="submit" class="btn mainBtn py-2 fs-4">
+                    <button id="inquire" type="submit" class="btn mainBtn py-2 fs-4" data-loading-text="{{ __('site.sending') }}">
                         {{ __('site.inquire_now') }}
                     </button>
                 </div>
@@ -323,152 +328,204 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        flatpickr("input[name='date_from']", {
-            dateFormat: "Y-m-d",
-            minDate: "today"
-        });
+        var dateToPicker = null;
+        var dateFromEl = document.querySelector("input[name='date_from']");
+        var dateToEl = document.querySelector("input[name='date_to']");
 
-        flatpickr("input[name='date_to']", {
-            dateFormat: "Y-m-d",
-            minDate: "today"
-        });
+        if (dateFromEl && typeof flatpickr !== 'undefined') {
+            flatpickr(dateFromEl, {
+                dateFormat: 'Y-m-d',
+                minDate: 'today',
+                onChange: function (_selectedDates, dateStr) {
+                    if (dateToPicker && dateStr) {
+                        dateToPicker.set('minDate', dateStr);
+                        if (dateToEl && dateToEl.value && dateToEl.value <= dateStr) {
+                            dateToPicker.setDate(dateStr);
+                        }
+                    }
+                },
+            });
+        }
+
+        if (dateToEl && typeof flatpickr !== 'undefined') {
+            dateToPicker = flatpickr(dateToEl, {
+                dateFormat: 'Y-m-d',
+                minDate: dateFromEl && dateFromEl.value ? dateFromEl.value : 'today',
+            });
+        }
     });
 </script>
 
     <script>
-        $('#input-exact-date').click(function () {
-            $('#exact-dates').show()
-            $('#approximate').hide()
-        })
-        $('#input-approximate-date').click(function () {
-            $('#approximate').show()
-            $('#exact-dates').hide()
-        })
-        $('.destination-box .box').click(function () {
-            $('.destination-box .box').removeClass('checked')
-            $(this).addClass('checked')
-        })
-        $('#step-1-next').click(function () {
-            // $('#makeTrip #step-2').slideDown()
-            $('#makeTrip #step-1').slideUp()
-            $('#makeTrip #step-2').fadeIn()
-        })
-        $('#step-2-next').click(function () {
-            $('#makeTrip #step-2').slideUp()
-            $('#makeTrip #step-3').fadeIn()
-        })
-
-        $('#step-2-back').click(function () {
-            $('#makeTrip #step-2').slideUp()
-            $('#makeTrip #step-1').fadeIn()
-        })
-        $('#step-3-back').click(function () {
-            $('#makeTrip #step-3').slideUp()
-            $('#makeTrip #step-2').fadeIn()
-        });
-        //adults
-        $('#minusAdult').click(function () {
-            let val = parseInt($("#adultValue").val())
-            $("#countValueAdult").text(Math.max(1, val-1))
-            $("#adultValue").val(Math.max(1, val-1))
-        })
-
-        $('#plusAdult').click(function () {
-            let val = parseInt($("#adultValue").val())
-            $("#countValueAdult").text(val+1)
-            $("#adultValue").val(val+1)
-        })
-        //children
-        $('#minusChildren').click(function () {
-            let val = parseInt($("#childrenValue").val())
-            $("#countValueChildren").text(Math.max(0, val-1))
-            $("#childrenValue").val(Math.max(0, val-1))
-        })
-
-        $('#plusChildren').click(function () {
-            let val = parseInt($("#childrenValue").val())
-            $("#countValueChildren").text(val+1)
-            $("#childrenValue").val(val+1)
-        })
-        //infants
-        $('#minusInfants').click(function () {
-            let val = parseInt($("#infantsValue").val())
-            $("#countValueInfants").text(Math.max(0, val-1))
-            $("#infantsValue").val(Math.max(0, val-1))
-        })
-
-        $('#plusInfants').click(function () {
-            let val = parseInt($("#infantsValue").val())
-            $("#countValueInfants").text(val+1)
-            $("#infantsValue").val(val+1)
-        })
-    </script>
-    
-    <script>
         (function () {
-            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-            if (csrfMeta) {
-                axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfMeta.getAttribute('content');
-            }
-            axios.defaults.headers.common['Accept'] = 'application/json';
-
             const form = document.getElementById('custom-trip');
+            const alertBox = document.getElementById('custom-trip-alert');
             if (!form) {
                 return;
             }
 
+            const submitUrl = @json(route('site.custom-trip-store'));
+            const msgRequired = @json(__('site.please_complete_required_fields'));
+            const msgUnexpected = @json(__('site.unexpected_error'));
+            const msgNetwork = @json(__('site.network_error'));
+
+            function showAlert(message, type) {
+                if (!alertBox) {
+                    return;
+                }
+                alertBox.textContent = message;
+                alertBox.className = 'alert alert-' + (type || 'danger');
+                alertBox.classList.remove('d-none');
+                alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            function hideAlert() {
+                if (alertBox) {
+                    alertBox.classList.add('d-none');
+                    alertBox.textContent = '';
+                }
+            }
+
+            function clearFieldErrors() {
+                form.querySelectorAll('.is-invalid').forEach(function (el) {
+                    el.classList.remove('is-invalid');
+                });
+            }
+
+            function markInvalidFields() {
+                form.querySelectorAll(':invalid').forEach(function (el) {
+                    el.classList.add('is-invalid');
+                });
+            }
+
+            function getCsrfToken() {
+                const csrfInput = form.querySelector('input[name="_token"]');
+                if (csrfInput && csrfInput.value) {
+                    return csrfInput.value;
+                }
+                const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+                return csrfMeta ? csrfMeta.getAttribute('content') : '';
+            }
+
+            function postForm(formData) {
+                const token = getCsrfToken();
+                const headers = {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                };
+                if (token) {
+                    headers['X-CSRF-TOKEN'] = token;
+                }
+
+                if (typeof axios !== 'undefined') {
+                    return axios.post(submitUrl, formData, { headers: headers });
+                }
+
+                return fetch(submitUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: headers,
+                    credentials: 'same-origin',
+                }).then(function (res) {
+                    return res.json().then(function (data) {
+                        if (!res.ok) {
+                            const err = new Error(data.error || data.message || 'Request failed');
+                            err.response = { data: data, status: res.status };
+                            throw err;
+                        }
+                        return { data: data };
+                    });
+                });
+            }
+
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
+                hideAlert();
+                clearFieldErrors();
 
                 if (!form.checkValidity()) {
+                    markInvalidFields();
                     form.reportValidity();
                     const firstInvalid = form.querySelector(':invalid');
                     if (firstInvalid) {
                         firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        firstInvalid.focus();
+                        try {
+                            firstInvalid.focus({ preventScroll: true });
+                        } catch (err) {
+                            firstInvalid.focus();
+                        }
                     }
-                    toastr.warning('Please complete all required fields below.');
+                    showAlert(msgRequired, 'warning');
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning(msgRequired);
+                    }
                     return;
                 }
 
                 const formData = new FormData(form);
                 const submitBtn = form.querySelector('button[type="submit"]');
                 const originalText = submitBtn ? submitBtn.textContent : '';
+                const loadingText = submitBtn && submitBtn.getAttribute('data-loading-text')
+                    ? submitBtn.getAttribute('data-loading-text')
+                    : '…';
+
                 if (submitBtn) {
                     submitBtn.disabled = true;
-                    submitBtn.textContent = 'Sending...';
+                    submitBtn.textContent = loadingText;
                 }
 
-                axios.post(form.getAttribute('action'), formData)
-                    .then((res) => {
-                        toastr.success(res.data.message || 'Request sent successfully.');
+                postForm(formData)
+                    .then(function (res) {
+                        hideAlert();
+                        const message = res.data.message || @json(__('site.customize_trip_success'));
+                        if (typeof toastr !== 'undefined') {
+                            toastr.success(message);
+                        } else {
+                            showAlert(message, 'success');
+                        }
                         form.reset();
-                        document.getElementById('adultValue').value = 1;
-                        document.getElementById('childrenValue').value = 0;
-                        document.getElementById('infantsValue').value = 0;
-                        document.getElementById('countValueAdult').textContent = '1';
-                        document.getElementById('countValueChildren').textContent = '0';
-                        document.getElementById('countValueInfants').textContent = '0';
-                        document.querySelectorAll('.child-age-container').forEach(el => el.style.display = 'none');
-                        const hearDefault = document.getElementById('how_did_you_hear_about_us1');
+                        var adultValue = document.getElementById('adultValue');
+                        var childrenValue = document.getElementById('childrenValue');
+                        var infantsValue = document.getElementById('infantsValue');
+                        if (adultValue) adultValue.value = '1';
+                        if (childrenValue) childrenValue.value = '0';
+                        if (infantsValue) infantsValue.value = '0';
+                        var countAdult = document.getElementById('countValueAdult');
+                        var countChildren = document.getElementById('countValueChildren');
+                        var countInfants = document.getElementById('countValueInfants');
+                        if (countAdult) countAdult.textContent = '1';
+                        if (countChildren) countChildren.textContent = '0';
+                        if (countInfants) countInfants.textContent = '0';
+                        document.querySelectorAll('.child-age-container').forEach(function (el) {
+                            el.style.display = 'none';
+                        });
+                        var hearDefault = document.getElementById('how_did_you_hear_about_us1');
                         if (hearDefault) {
                             hearDefault.checked = true;
                         }
-                    })
-                    .catch(error => {
-                        let errorMessage = '{{ __('site.unexpected_error') }}';
-                        const data = error.response?.data;
-                        if (data?.error) {
-                            errorMessage = data.error;
-                        } else if (data?.message) {
-                            errorMessage = data.message;
-                        } else if (data?.errors) {
-                            const firstError = Object.values(data.errors)[0];
-                            errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
+                        if (typeof window.updateChildAgeFields === 'function') {
+                            window.updateChildAgeFields();
                         }
-                        toastr.error(errorMessage);
                     })
-                    .finally(() => {
+                    .catch(function (error) {
+                        var errorMessage = msgUnexpected;
+                        var data = error.response && error.response.data;
+                        if (data && data.error) {
+                            errorMessage = data.error;
+                        } else if (data && data.message) {
+                            errorMessage = data.message;
+                        } else if (data && data.errors) {
+                            var firstError = Object.values(data.errors)[0];
+                            errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
+                        } else if (!error.response) {
+                            errorMessage = msgNetwork;
+                        }
+                        showAlert(errorMessage, 'danger');
+                        if (typeof toastr !== 'undefined') {
+                            toastr.error(errorMessage);
+                        }
+                    })
+                    .finally(function () {
                         if (submitBtn) {
                             submitBtn.disabled = false;
                             submitBtn.textContent = originalText;

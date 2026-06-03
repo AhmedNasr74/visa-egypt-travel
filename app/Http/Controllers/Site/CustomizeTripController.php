@@ -34,7 +34,7 @@ class CustomizeTripController extends Controller
                 'first_name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'email', 'max:255'],
                 'phone' => ['required', 'string', 'max:20'],
-                'codePhone' => ['required', 'string', 'max:5'],
+                'codePhone' => ['required', 'string', 'max:20'],
                 'nationality' => ['required', 'string', 'max:100'],
                 'date_from' => ['required', 'string'],
                 'date_to' => ['required', 'string'],
@@ -111,7 +111,7 @@ class CustomizeTripController extends Controller
                 'infant' => $data['infant'],
                 'note' => $data['note'],
                 'destination' => $data['travel_to'],
-                'days' => \Carbon\Carbon::parse($data['date_from'])->diffInDays($data['date_to']) + 1,
+                'days' => (string) (\Carbon\Carbon::parse($data['date_from'])->diffInDays($data['date_to']) + 1),
                 'date_type' => 'exact',
             ];
 
@@ -169,22 +169,28 @@ class CustomizeTripController extends Controller
             );
 
             return response()->json([
-                'message' => 'Your Customized Trip Created Successfully!',
-                'link' => route('site.home')
+                'message' => __('site.customize_trip_success'),
+                'link' => route('site.home'),
             ]);
-            
+
         } catch (QueryException $exception) {
             \Log::error('Customize trip form submission error (QueryException): ' . $exception->getMessage());
             \Log::error('SQL: ' . $exception->getSql());
             \Log::error('Bindings: ' . json_encode($exception->getBindings()));
+
+            $hint = str_contains($exception->getMessage(), 'Unknown column')
+                ? ' Database schema is out of date — run: php artisan migrate --force'
+                : '';
+
             return response()->json([
-                'error' => __('main.unexpected-error')
+                'error' => __('site.server_error') . $hint,
             ], 500);
         } catch (\Exception $exception) {
             \Log::error('Customize trip form submission error (Exception): ' . $exception->getMessage());
             \Log::error('Stack trace: ' . $exception->getTraceAsString());
+
             return response()->json([
-                'error' => __('main.unexpected-error')
+                'error' => __('site.unexpected_error'),
             ], 500);
         }
     }
