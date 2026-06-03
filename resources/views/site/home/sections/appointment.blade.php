@@ -27,16 +27,16 @@
                         <option value="mrs">{{ __('site.mrs') }}</option>
                         <option value="ms">{{ __('site.ms') }}</option>
                     </select>
-                    <input type="text" name="name" placeholder={{ __('site.name') }} class="col-span-6 md:col-span-5 py-2 focus:ring-0 rounded-md">
-                    <input type="email" name="email" placeholder={{ __('site.email') }} class="col-span-6 md:col-span-5 py-2 focus:ring-0 rounded-md">
+                    <input type="text" name="name" placeholder="{{ __('site.name') }}" class="col-span-6 md:col-span-5 py-2 focus:ring-0 rounded-md">
+                    <input type="email" name="email" placeholder="{{ __('site.email') }}" class="col-span-6 md:col-span-5 py-2 focus:ring-0 rounded-md">
                     <!-- row 2 -->
                     <select name="nationality" class="col-span-6 md:col-span-4 capitalize p-2 focus:ring-0 rounded-md">
                         @foreach ($countries as $country )
                             <option value="{{ $country->name."  ".$country->flag }}"> {{ $country->name."  ".$country->flag }}</option>
                         @endforeach
                     </select>
-                    <input type="date" name=" arrival_date" placeholder="{{ __('site.arrival_date') }}" class=" col-span-6 md:col-span-4 py-2 focus:ring-0 rounded-md">
-                    <input type="date" name="departure_date" placeholder={{ __('site.departure') }} class=" col-span-6 md:col-span-4 py-2 focus:ring-0 rounded-md">
+                    <input type="date" name="arrival_date" placeholder="{{ __('site.arrival_date') }}" class="col-span-6 md:col-span-4 py-2 focus:ring-0 rounded-md">
+                    <input type="date" name="departure_date" placeholder="{{ __('site.departure') }}" class="col-span-6 md:col-span-4 py-2 focus:ring-0 rounded-md">
 
                     <!-- row 3 -->
                     <div class="col-span-6">
@@ -91,7 +91,7 @@
                         <label for="hearAboutUs" class="capitalize">{{ __('site.about') }}</label>
                         <div class="mt-1 flex justify-between items-center flex-wrap">
                             <div>
-                                <input type="radio" name="optionsHear" class="optionsHear" id="searchEngine" value={{ __('site.search') }}>
+                                <input type="radio" name="optionsHear" class="optionsHear" id="searchEngine" value="{{ __('site.search') }}">
                                 <label for="searchEngine" class="capitalize">{{ __('site.search_engine') }}</label>
                             </div>
                             <div>

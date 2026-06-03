@@ -17,7 +17,7 @@ class CustomizeTripController extends Controller
 {
     public function index(){
         $destinations = CustomizedCategory::all();
-        $countries = Country::all();
+        $countries = Country::select('name', 'flag')->get();
 
         SiteSeo::publishPage(__('site.customize_trip'), 'Plan your tailor-made Egypt trip with ' . SiteSeo::siteName() . '.');
 
