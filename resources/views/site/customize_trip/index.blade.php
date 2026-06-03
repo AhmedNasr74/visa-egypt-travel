@@ -152,7 +152,6 @@
                                     placeholder={{ __('site.phone') }}
                                     id="userPhone"
                                     required
-                                    oninput="validatePhone()"
                                     value="{{ old('phone') }}"
                                 />
                                 <label for="userPhone" class="d-none">{{ __('site.this_field_is_required') }}</label>
@@ -288,7 +287,7 @@
                         <label>{{ __('site.about') }}</label>
                         <div class="d-flex flex-wrap">
                             <div class="custom-checkbox mx-2">
-                                <input class="form-check-input" type="radio" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us1" value="{{ __('site.search') }}" {{ old('how_did_you_hear_about_us') == __('site.search') ? 'checked' : '' }}>
+                                <input class="form-check-input" type="radio" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us1" value="{{ __('site.search') }}" {{ old('how_did_you_hear_about_us', __('site.search')) == __('site.search') ? 'checked' : '' }}>
                                 <label class="form-check-label my-0" for="how_did_you_hear_about_us1">{{ __('site.search') }}</label>
                             </div>
                             <div class="custom-checkbox mx-2">
@@ -406,102 +405,95 @@
     </script>
     
     <script>
-        // Set up axios defaults for CSRF token
-        axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
-        $("#custom-trip").on('submit', function (e) {
-            e.preventDefault();
-            
-            // Debug: Log form data
-            const formData = new FormData(this);
-            
-            // Ensure CSRF token is included
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            formData.append('_token', csrfToken);
-            
-            console.log('Form data being sent:', Object.fromEntries(formData));
-            
-            // Disable submit button to prevent double submission
-            const submitBtn = $(this).find('button[type="submit"]');
-            const originalText = submitBtn.text();
-            submitBtn.prop('disabled', true).text('Sending...');
-            
-            axios.post($(this).attr('action'), formData)
-                .then((res) => {
-                    console.log('Success response:', res.data);
-                    toastr.success(res.data.message);
-                    $(this).trigger("reset");
-                    // Reset select2 dropdowns if any
-                    $(this).find('.select2').val(null).trigger('change');
-                    // Reset date inputs
-                    $(this).find('input[type="text"]').val('');
-                    // Reset number inputs
-                    $(this).find('input[type="number"]').val('');
-                    // Reset hidden inputs
-                    $('#adultValue').val(1);
-                    $('#childrenValue').val(0);
-                    $('#infantsValue').val(0);
-                    $('#countValueAdult').text(1);
-                    $('#countValueChildren').text(0);
-                    $('#countValueInfants').text(0);
-                    // Hide child age fields
-                    $('.child-age-container').hide();
-                })
-                .catch(error => {
-                    console.log('Error response:', error);
-                    console.log('Error response data:', error.response?.data);
-                    console.log('Error status:', error.response?.status);
-                    console.log('Error message:', error.message);
-                    
-                    let errorMessage = '{{ __('site.unexpected_error') }}';
-                    
-                    if (error.response?.data) {
-                        if (error.response.data.error) {
-                            errorMessage = error.response.data.error;
-                        } else if (error.response.data.message) {
-                            errorMessage = error.response.data.message;
-                        } else if (error.response.data.errors) {
-                            // Handle validation errors
-                            const firstError = Object.values(error.response.data.errors)[0];
+        (function () {
+            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            if (csrfMeta) {
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfMeta.getAttribute('content');
+            }
+            axios.defaults.headers.common['Accept'] = 'application/json';
+
+            const form = document.getElementById('custom-trip');
+            if (!form) {
+                return;
+            }
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    const firstInvalid = form.querySelector(':invalid');
+                    if (firstInvalid) {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstInvalid.focus();
+                    }
+                    toastr.warning('Please complete all required fields below.');
+                    return;
+                }
+
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn ? submitBtn.textContent : '';
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Sending...';
+                }
+
+                axios.post(form.getAttribute('action'), formData)
+                    .then((res) => {
+                        toastr.success(res.data.message || 'Request sent successfully.');
+                        form.reset();
+                        document.getElementById('adultValue').value = 1;
+                        document.getElementById('childrenValue').value = 0;
+                        document.getElementById('infantsValue').value = 0;
+                        document.getElementById('countValueAdult').textContent = '1';
+                        document.getElementById('countValueChildren').textContent = '0';
+                        document.getElementById('countValueInfants').textContent = '0';
+                        document.querySelectorAll('.child-age-container').forEach(el => el.style.display = 'none');
+                        const hearDefault = document.getElementById('how_did_you_hear_about_us1');
+                        if (hearDefault) {
+                            hearDefault.checked = true;
+                        }
+                    })
+                    .catch(error => {
+                        let errorMessage = '{{ __('site.unexpected_error') }}';
+                        const data = error.response?.data;
+                        if (data?.error) {
+                            errorMessage = data.error;
+                        } else if (data?.message) {
+                            errorMessage = data.message;
+                        } else if (data?.errors) {
+                            const firstError = Object.values(data.errors)[0];
                             errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
                         }
-                    } else if (error.message) {
-                        errorMessage = error.message;
-                    }
-                    
-                    console.log('Displaying error message:', errorMessage);
-                    toastr.error(errorMessage);
-                })
-                .finally(() => {
-                    // Re-enable submit button
-                    submitBtn.prop('disabled', false).text(originalText);
-                });
-        });
+                        toastr.error(errorMessage);
+                    })
+                    .finally(() => {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = originalText;
+                        }
+                    });
+            });
+        })();
     </script>
 
 <script>
-// Show/hide child age fields based on number of children
 document.addEventListener('DOMContentLoaded', function() {
     const childrenInput = document.getElementById('childrenValue');
     const childAgeContainers = document.querySelectorAll('.child-age-container');
-    
-    function updateChildAgeFields() {
-        const numChildren = parseInt(childrenInput.value);
-        
+
+    window.updateChildAgeFields = function () {
+        const numChildren = parseInt(childrenInput.value, 10) || 0;
         childAgeContainers.forEach((container, index) => {
-            if (index < numChildren) {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
+            container.style.display = index < numChildren ? 'block' : 'none';
         });
-    }
-    
-    childrenInput.addEventListener('change', updateChildAgeFields);
-    updateChildAgeFields(); // Initialize on page load
+    };
+
+    childrenInput.addEventListener('change', window.updateChildAgeFields);
+    window.updateChildAgeFields();
 });
 
-// Plus/minus buttons functionality
 document.getElementById('plusAdult').addEventListener('click', function() {
     const input = document.getElementById('adultValue');
     const span = document.getElementById('countValueAdult');
@@ -523,7 +515,7 @@ document.getElementById('plusChildren').addEventListener('click', function() {
     const span = document.getElementById('countValueChildren');
     input.value = parseInt(input.value) + 1;
     span.textContent = input.value;
-    updateChildAgeFields();
+    window.updateChildAgeFields();
 });
 
 document.getElementById('minusChildren').addEventListener('click', function() {
@@ -532,7 +524,7 @@ document.getElementById('minusChildren').addEventListener('click', function() {
     if (parseInt(input.value) > 0) {
         input.value = parseInt(input.value) - 1;
         span.textContent = input.value;
-        updateChildAgeFields();
+        window.updateChildAgeFields();
     }
 });
 

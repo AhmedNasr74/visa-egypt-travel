@@ -71,7 +71,7 @@ return [
     'talk_with_our_team' => 'Talk with our team',
     'any_question_feel_free_to_contact' => 'Any Question? Feel Free to Contact',
     'start_now' => 'Start Now',
-    'plan_your_trip_with_croconileegypt' => 'Plan your trip with CrocoNileEgypt',
+    'plan_your_trip_with_VisaEgyptTravel' => 'Plan your trip with VisaEgyptTravel',
     'make_tour' => 'Make Tour',
     'discount' => 'Discount',
     'mr' => 'Mr',

@@ -80,7 +80,7 @@ return [
     'talk_with_our_team' => 'Habla con nuestro equipo',
     'any_question_feel_free_to_contact' => '¿Alguna pregunta? No dudes en contactarnos',
     'start_now' => 'Comenzar Ahora',
-    'plan_your_trip_with_croconileegypt' => 'Planifica tu viaje con CrocoNileEgypt',
+    'plan_your_trip_with_VisaEgyptTravel' => 'Planifica tu viaje con VisaEgyptTravel',
     'make_tour' => 'Hacer Tour',
     'discount' => 'Descuento',
     'mr' => 'Sr',

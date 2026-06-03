@@ -186,7 +186,7 @@
     {{ __('site.do_you_face_an_issue_sending_a_request') }}
   </h3>
   <h4 class="text-lg font-bold text-main-color mb-1">
-<i class="bx bx-envelope text-[17px] text-main-color"></i> info@CrocoNileEgypt.com
+<i class="bx bx-envelope text-[17px] text-main-color"></i> info@VisaEgyptTravel.com
   </h4>
   <h4 class="text-lg font-bold text-main-color">
 <i class="bx bxl-whatsapp text-[17px] text-main-color"></i> +20 100 505 5952

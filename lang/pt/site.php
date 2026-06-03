@@ -124,7 +124,7 @@ return [
     'talk_with_our_team' => 'Fale com nossa equipe',
     'any_question_feel_free_to_contact' => 'Alguma pergunta? Não hesite em nos contatar',
     'start_now' => 'Começar Agora',
-    'plan_your_trip_with_croconileegypt' => 'Planeje sua viagem com CrocoNileEgypt',
+    'plan_your_trip_with_VisaEgyptTravel' => 'Planeje sua viagem com VisaEgyptTravel',
     'make_tour' => 'Fazer Passeio',
     'discount' => 'Desconto',
     'mr' => 'Sr',

@@ -122,7 +122,7 @@ return [
     'talk_with_our_team' => 'Parlez avec notre équipe',
     'any_question_feel_free_to_contact' => 'Une question ? N\'hésitez pas à nous contacter',
     'start_now' => 'Commencer Maintenant',
-    'plan_your_trip_with_croconileegypt' => 'Planifiez votre voyage avec CrocoNileEgypt',
+    'plan_your_trip_with_VisaEgyptTravel' => 'Planifiez votre voyage avec VisaEgyptTravel',
     'make_tour' => 'Faire un Circuit',
     'discount' => 'Réduction',
     'mr' => 'M',

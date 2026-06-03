@@ -1091,7 +1091,7 @@ Route::post('/test/book-tour', function (Request $request) {
     }
 })->name('test.book.tour');
 
-// Test route for Plan your trip with CrocoNileEgypt form
+// Test route for Plan your trip with VisaEgyptTravel form
 Route::post('/test/plan-trip', function (Request $request) {
     try {
         // Log the incoming data

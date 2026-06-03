@@ -50,15 +50,22 @@ class CustomizeTripController extends Controller
 
             if ($validator->fails()) {
                 \Log::error('Validation failed:', $validator->errors()->toArray());
-                return response()->json(['error' => $validator->errors()->first()], 422);
+
+                return response()->json([
+                    'error' => $validator->errors()->first(),
+                    'errors' => $validator->errors(),
+                ], 422);
             }
 
             $data = $validator->validated();
             \Log::info('Validated data:', $data);
-            
-            // Convert children_ages strings to integers
+
+            $childCount = (int) ($data['child'] ?? 0);
             if (isset($data['children_ages']) && is_array($data['children_ages'])) {
-                $data['children_ages'] = array_map('intval', $data['children_ages']);
+                $ages = array_map('intval', $data['children_ages']);
+                $data['children_ages'] = array_values(array_slice($ages, 0, $childCount));
+            } else {
+                $data['children_ages'] = [];
             }
             
             // Validate dates manually
@@ -88,7 +95,6 @@ class CustomizeTripController extends Controller
                 }
             }
             
-            // Prepare data for database insertion
             $tripData = [
                 'first_name' => $data['first_name'],
                 'email' => $data['email'],
@@ -103,14 +109,25 @@ class CustomizeTripController extends Controller
                 'note' => $data['note'],
                 'destination' => $data['travel_to'],
                 'days' => \Carbon\Carbon::parse($data['date_from'])->diffInDays($data['date_to']) + 1,
+                'date_type' => 'exact',
+            ];
+
+            $optionalColumns = [
                 'request' => $data['request'] ?? null,
                 'age_range' => $data['age_range'] ?? null,
                 'travel_to' => $data['travel_to'],
                 'accommodation_choices' => $data['accommodation_choices'],
                 'how_did_you_hear_about_us' => $data['how_did_you_hear_about_us'],
-                'children_ages' => $data['children_ages'] ?? [],
-                'date_type' => 'exact', // Add the missing date_type field
+                'children_ages' => $data['children_ages'],
             ];
+
+            foreach ($optionalColumns as $column => $value) {
+                if (\Illuminate\Support\Facades\Schema::hasColumn('customized_trips', $column)) {
+                    $tripData[$column] = $value;
+                } else {
+                    $tripData['note'] .= "\n" . ucfirst(str_replace('_', ' ', $column)) . ': ' . (is_array($value) ? implode(', ', $value) : (string) $value);
+                }
+            }
 
             \Log::info('Attempting to create trip with data:', $tripData);
             
