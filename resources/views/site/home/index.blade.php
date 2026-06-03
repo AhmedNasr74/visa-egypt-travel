@@ -23,9 +23,9 @@
 
     @include('site.home.sections.book-with-confidant')
 
+    @include('site.home.sections.faq_contact')
 
-    <!-- =================  start ========================= -->
-    <!-- ========================= End  Section ============================ -->
+    @include('site.home.sections.newsletter')
 
     @include('site.home.sections.blogs')
 

@@ -11,6 +11,7 @@ use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Country;
 use App\Models\Destination;
+use App\Models\Faq;
 use App\Models\Page;
 use App\Models\Setting;
 use App\Models\Tour;
@@ -56,7 +57,26 @@ class HomeController extends Controller
 
         $page = $page ?? Page::byKey('home')->firstOrNew();
 
-        return view('site.home.index', compact('page','packages','offers', 'slider', 'blogs', 'destinations', 'categories', 'countries'));
+        $homeFaqs = Faq::where('enabled', true)
+            ->where(function ($query) {
+                $query->where('home', true)->orWhere('important', true);
+            })
+            ->orderByDesc('important')
+            ->orderByDesc('home')
+            ->limit(8)
+            ->get();
+
+        return view('site.home.index', compact(
+            'page',
+            'packages',
+            'offers',
+            'slider',
+            'blogs',
+            'destinations',
+            'categories',
+            'countries',
+            'homeFaqs',
+        ));
     }
 
     public function makeAppointment(Request $request)
