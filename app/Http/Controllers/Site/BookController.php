@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
-use App\Mail\BookingSuccessMail;
 use App\Mail\BookingAdminMail;
+use App\Mail\BookingSuccessMail;
 use App\Models\Booking;
+use App\Services\DualEmailSender;
 use App\Models\Country;
 use App\Models\Tour;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
@@ -82,80 +82,7 @@ class BookController extends Controller
 
                 \Log::info('Tour booking created successfully:', ['id' => $booking->id]);
 
-                // Send confirmation email to client
-                try {
-                    \Log::info('Starting client booking confirmation email process', [
-                        'client_email' => $booking->email,
-                        'booking_id' => $booking->id
-                    ]);
-                    
-                    Mail::to($booking->email)->send(new BookingSuccessMail($booking));
-                    
-                    \Log::info('Client booking confirmation email sent successfully', [
-                        'client_email' => $booking->email,
-                        'booking_id' => $booking->id,
-                        'email_sent_at' => now()->toDateTimeString()
-                    ]);
-                } catch (\Exception $e) {
-                    \Log::error('Failed to send client booking confirmation email', [
-                        'error_message' => $e->getMessage(),
-                        'error_file' => $e->getFile(),
-                        'error_line' => $e->getLine(),
-                        'client_email' => $booking->email,
-                        'booking_id' => $booking->id,
-                        'stack_trace' => $e->getTraceAsString()
-                    ]);
-                    // Don't fail the entire request if email fails
-                }
-                
-                // Send notification email to admin
-                try {
-                    \Log::info('Starting admin booking notification email process');
-                    
-                    // Get admin email from settings
-                    $contactEmailSetting = setting('contact_email');
-                    $adminEmail = is_array($contactEmailSetting) ? $contactEmailSetting[0] : $contactEmailSetting;
-                    
-                    \Log::info('Admin email lookup from settings', [
-                        'contact_email_setting' => $contactEmailSetting,
-                        'admin_email_extracted' => $adminEmail,
-                        'admin_email_found' => !empty($adminEmail),
-                        'booking_id' => $booking->id
-                    ]);
-                    
-                    if (!empty($adminEmail)) {
-                        \Log::info('Sending admin booking notification email', [
-                            'admin_email' => $adminEmail,
-                            'booking_id' => $booking->id,
-                            'email_subject' => 'New Tour Booking Received'
-                        ]);
-                        
-                        Mail::to($adminEmail)->send(new BookingAdminMail($booking));
-                        
-                        \Log::info('Admin booking notification email sent successfully', [
-                            'admin_email' => $adminEmail,
-                            'booking_id' => $booking->id,
-                            'email_sent_at' => now()->toDateTimeString()
-                        ]);
-                    } else {
-                        \Log::warning('No admin email found in settings', [
-                            'setting_key' => 'contact_email',
-                            'setting_value' => $contactEmailSetting,
-                            'available_settings' => \App\Models\Setting::pluck('option_key')->toArray(),
-                            'booking_id' => $booking->id
-                        ]);
-                    }
-                } catch (\Exception $e) {
-                    \Log::error('Failed to send admin booking notification email', [
-                        'error_message' => $e->getMessage(),
-                        'error_file' => $e->getFile(),
-                        'error_line' => $e->getLine(),
-                        'booking_id' => $booking->id,
-                        'admin_email' => $adminEmail ?? 'No admin email found',
-                        'stack_trace' => $e->getTraceAsString()
-                    ]);
-                    // Don't fail the entire request if email fails
-                }
+                $this->sendTourBookingEmails($booking);
 
                 DB::commit();
 
@@ -190,5 +117,21 @@ class BookController extends Controller
                 ] : null,
             ], 500);
         }
+    }
+
+    private function sendTourBookingEmails(Booking $booking): void
+    {
+        DualEmailSender::sendGuest(
+            $booking->email,
+            new BookingSuccessMail($booking),
+            'tour_booking',
+            ['booking_id' => $booking->id]
+        );
+
+        DualEmailSender::sendAdmin(
+            new BookingAdminMail($booking),
+            'tour_booking',
+            ['booking_id' => $booking->id]
+        );
     }
 }

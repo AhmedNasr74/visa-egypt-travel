@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(base_path('config/mailing.php'), 'mailing');
     }
 
     /**

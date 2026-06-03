@@ -6,9 +6,8 @@ use App\Enums\SettingKey;
 use App\Http\Controllers\Controller;
 use App\Mail\TailorMadeMail;
 use App\Models\Destination;
-use App\Models\User;
+use App\Services\DualEmailSender;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class TourTailorController extends Controller
@@ -88,24 +87,18 @@ class TourTailorController extends Controller
                 'requirements' => $data['notes'] ?? 'No special requirements specified.'
             ];
 
-            // Send confirmation email to client
-            try {
-                Mail::to($data['email'])->send(new TailorMadeMail($formData, false));
-            } catch (\Exception $e) {
-                \Log::error('Failed to send client confirmation email: ' . $e->getMessage());
-                // Don't fail the entire request if email fails
-            }
-            
-            // Send notification email to admin
-            try {
-                $admin = User::role('Administrator')->first();
-                if ($admin) {
-                    Mail::to($admin->email)->send(new TailorMadeMail($formData, true));
-                }
-            } catch (\Exception $e) {
-                \Log::error('Failed to send admin notification email: ' . $e->getMessage());
-                // Don't fail the entire request if email fails
-            }
+            DualEmailSender::sendGuest(
+                $data['email'],
+                new TailorMadeMail($formData, false),
+                'tailor_made',
+                ['email' => $data['email']]
+            );
+
+            DualEmailSender::sendAdmin(
+                new TailorMadeMail($formData, true),
+                'tailor_made',
+                ['email' => $data['email']]
+            );
 
             return response()->json(['message' => __('main.your-request-have-been-sent')]);
             

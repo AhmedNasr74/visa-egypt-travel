@@ -15,7 +15,7 @@ use App\Models\Page;
 use App\Models\Setting;
 use App\Models\Tour;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Services\DualEmailSender;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -102,89 +102,19 @@ class HomeController extends Controller
             $appointment = Appointment::create($data);
             \Log::info('Appointment record created successfully:', ['id' => $appointment->id, 'form_type' => $formType]);
             
-            // Send confirmation email to client
-            try {
-                \Log::info('Starting client appointment confirmation email process', [
-                    'client_email' => $data['email'],
-                    'appointment_id' => $appointment->id,
-                    'form_type' => $formType
-                ]);
-                
-                Mail::to($data['email'])->send(new AppointmentMail($data, false, $formType));
-                
-                \Log::info('Client appointment confirmation email sent successfully', [
-                    'client_email' => $data['email'],
-                    'appointment_id' => $appointment->id,
-                    'form_type' => $formType,
-                    'email_sent_at' => now()->toDateTimeString()
-                ]);
-            } catch (\Exception $e) {
-                \Log::error('Failed to send client appointment confirmation email', [
-                    'error_message' => $e->getMessage(),
-                    'error_file' => $e->getFile(),
-                    'error_line' => $e->getLine(),
-                    'client_email' => $data['email'],
-                    'appointment_id' => $appointment->id,
-                    'form_type' => $formType,
-                    'stack_trace' => $e->getTraceAsString()
-                ]);
-                // Don't fail the entire request if email fails
-            }
-            
-            // Send notification email to admin
-            try {
-                \Log::info('Starting admin appointment notification email process');
-                
-                // Get admin email from settings
-                $contactEmailSetting = setting('contact_email');
-                $adminEmail = is_array($contactEmailSetting) ? $contactEmailSetting[0] : $contactEmailSetting;
-                
-                \Log::info('Admin email lookup from settings', [
-                    'contact_email_setting' => $contactEmailSetting,
-                    'admin_email_extracted' => $adminEmail,
-                    'admin_email_found' => !empty($adminEmail),
-                    'appointment_id' => $appointment->id,
-                    'form_type' => $formType
-                ]);
-                
-                if (!empty($adminEmail)) {
-                    \Log::info('Sending admin appointment notification email', [
-                        'admin_email' => $adminEmail,
-                        'appointment_id' => $appointment->id,
-                        'form_type' => $formType,
-                        'email_subject' => 'New ' . ucfirst($formType) . ' Request Received'
-                    ]);
-                    
-                    Mail::to($adminEmail)->send(new AppointmentMail($data, true, $formType));
-                    
-                    \Log::info('Admin appointment notification email sent successfully', [
-                        'admin_email' => $adminEmail,
-                        'appointment_id' => $appointment->id,
-                        'form_type' => $formType,
-                        'email_sent_at' => now()->toDateTimeString()
-                    ]);
-                } else {
-                    \Log::warning('No admin email found in settings', [
-                        'setting_key' => 'contact_email',
-                        'setting_value' => $contactEmailSetting,
-                        'available_settings' => \App\Models\Setting::pluck('option_key')->toArray(),
-                        'appointment_id' => $appointment->id,
-                        'form_type' => $formType
-                    ]);
-                }
-            } catch (\Exception $e) {
-                \Log::error('Failed to send admin appointment notification email', [
-                    'error_message' => $e->getMessage(),
-                    'error_file' => $e->getFile(),
-                    'error_line' => $e->getLine(),
-                    'appointment_id' => $appointment->id,
-                    'form_type' => $formType,
-                    'admin_email' => $adminEmail ?? 'No admin email found',
-                    'stack_trace' => $e->getTraceAsString()
-                ]);
-                // Don't fail the entire request if email fails
-            }
-            
+            DualEmailSender::sendGuest(
+                $data['email'],
+                new AppointmentMail($data, false, $formType),
+                'appointment_form',
+                ['appointment_id' => $appointment->id, 'form_type' => $formType]
+            );
+
+            DualEmailSender::sendAdmin(
+                new AppointmentMail($data, true, $formType),
+                'appointment_form',
+                ['appointment_id' => $appointment->id, 'form_type' => $formType]
+            );
+
             $successMessage = $isNileCruise 
                 ? 'Your Nile River Cruise request has been submitted successfully! We will contact you soon.'
                 : __('main.appointment-sent-message');
@@ -227,7 +157,12 @@ class HomeController extends Controller
             'name' => ['required', 'string'],
             'phone' => ['required', 'numeric'],
         ]);
-        Mail::to(email())->send(new ContactFormMail($data));
-        return response()->json(['message' => "Email Sent We Will Call U Soon !"]);
+        DualEmailSender::sendAdmin(
+            new ContactFormMail($data),
+            'callback_request',
+            ['phone' => $data['phone'] ?? null]
+        );
+
+        return response()->json(['message' => 'Email Sent We Will Call U Soon !']);
     }
 }

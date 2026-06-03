@@ -8,8 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Helpers\EmailHelper;
+use Illuminate\Support\Facades\Mail;
 use PDF;
-use Mail;
 class GenerateInvoicePDF implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -41,7 +42,7 @@ class GenerateInvoicePDF implements ShouldQueue
         $pdf = PDF::loadView('site.tour_details.invoice', $data);
         $pdfData = $pdf->output(); // Get raw PDF data
 
-        $recipients = ["siefhane@gmail.com", "sieftade@gmail.com"];
+        $recipients = EmailHelper::getNotificationRecipientEmails();
         $title = "Invoice";
         $body = "Please find attached the invoice.";
 

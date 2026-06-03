@@ -7,10 +7,9 @@ use App\Mail\CustomizeTripMail;
 use App\Models\CustomizedCategory;
 use App\Models\CustomizedTrip;
 use App\Models\Country;
-use App\Models\User;
+use App\Services\DualEmailSender;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class CustomizeTripController extends Controller
@@ -136,88 +135,18 @@ class CustomizeTripController extends Controller
                 'requirements' => $data['note'] . (isset($data['request']) ? ' | Request: ' . $data['request'] : '')
             ];
 
-            // Send confirmation email to client
-            try {
-                \Log::info('Starting client confirmation email process', [
-                    'client_email' => $data['email'],
-                    'trip_id' => $customizedTrip->id
-                ]);
-                
-                \Log::info('Sending client confirmation email', [
-                    'client_email' => $data['email'],
-                    'trip_id' => $customizedTrip->id,
-                    'form_data_keys' => array_keys($formData),
-                    'email_subject' => 'Your Customized Trip Request Confirmation'
-                ]);
-                
-                Mail::to($data['email'])->send(new CustomizeTripMail($formData, false));
-                
-                \Log::info('Client confirmation email sent successfully', [
-                    'client_email' => $data['email'],
-                    'trip_id' => $customizedTrip->id,
-                    'email_sent_at' => now()->toDateTimeString()
-                ]);
-            } catch (\Exception $e) {
-                \Log::error('Failed to send client confirmation email', [
-                    'error_message' => $e->getMessage(),
-                    'error_file' => $e->getFile(),
-                    'error_line' => $e->getLine(),
-                    'client_email' => $data['email'],
-                    'trip_id' => $customizedTrip->id,
-                    'stack_trace' => $e->getTraceAsString()
-                ]);
-                // Don't fail the entire request if email fails
-            }
-            
-            // Send notification email to admin
-            try {
-                \Log::info('Starting admin notification email process');
-                
-                // Get admin email from settings instead of user role
-                $contactEmailSetting = setting('contact_email');
-                $adminEmail = is_array($contactEmailSetting) ? $contactEmailSetting[0] : $contactEmailSetting;
-                
-                \Log::info('Admin email lookup from settings', [
-                    'contact_email_setting' => $contactEmailSetting,
-                    'admin_email_extracted' => $adminEmail,
-                    'admin_email_found' => !empty($adminEmail),
-                    'trip_id' => $customizedTrip->id
-                ]);
-                
-                if (!empty($adminEmail)) {
-                    \Log::info('Sending admin notification email', [
-                        'admin_email' => $adminEmail,
-                        'trip_id' => $customizedTrip->id,
-                        'form_data_keys' => array_keys($formData),
-                        'email_subject' => 'New Customized Trip Request Received'
-                    ]);
-                    
-                    Mail::to($adminEmail)->send(new CustomizeTripMail($formData, true, $customizedTrip->id));
-                    
-                    \Log::info('Admin notification email sent successfully', [
-                        'admin_email' => $adminEmail,
-                        'trip_id' => $customizedTrip->id,
-                        'email_sent_at' => now()->toDateTimeString()
-                    ]);
-                } else {
-                    \Log::warning('No admin email found in settings', [
-                        'setting_key' => 'contact_email',
-                        'setting_value' => $contactEmailSetting,
-                        'available_settings' => \App\Models\Setting::pluck('option_key')->toArray(),
-                        'trip_id' => $customizedTrip->id
-                    ]);
-                }
-            } catch (\Exception $e) {
-                \Log::error('Failed to send admin notification email', [
-                    'error_message' => $e->getMessage(),
-                    'error_file' => $e->getFile(),
-                    'error_line' => $e->getLine(),
-                    'trip_id' => $customizedTrip->id,
-                    'admin_email' => $adminEmail ?? 'No admin email found',
-                    'stack_trace' => $e->getTraceAsString()
-                ]);
-                // Don't fail the entire request if email fails
-            }
+            DualEmailSender::sendGuest(
+                $data['email'],
+                new CustomizeTripMail($formData, false),
+                'customize_trip',
+                ['trip_id' => $customizedTrip->id]
+            );
+
+            DualEmailSender::sendAdmin(
+                new CustomizeTripMail($formData, true, $customizedTrip->id),
+                'customize_trip',
+                ['trip_id' => $customizedTrip->id]
+            );
 
             return response()->json([
                 'message' => 'Your Customized Trip Created Successfully!',

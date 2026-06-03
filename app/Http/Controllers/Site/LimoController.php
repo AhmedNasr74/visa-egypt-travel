@@ -12,8 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use App\Services\DualEmailSender;
 use Illuminate\View\View;
 
 class LimoController extends Controller
@@ -97,24 +96,11 @@ class LimoController extends Controller
 
     private function notifyAdminsOfLimoBooking(CarRental $rental): void
     {
-        $adminEmails = admin_notification_emails();
-        if ($adminEmails === []) {
-            Log::warning('Limo booking saved but no admin notification email is configured.', [
-                'rental_id' => $rental->id,
-            ]);
-
-            return;
-        }
-
-        try {
-            Mail::to($adminEmails)->send(new LimoBookingAdminMail($rental));
-        } catch (\Throwable $e) {
-            Log::error('Failed to send limo booking admin notification email.', [
-                'rental_id' => $rental->id,
-                'admin_emails' => $adminEmails,
-                'message' => $e->getMessage(),
-            ]);
-        }
+        DualEmailSender::sendAdmin(
+            new LimoBookingAdminMail($rental),
+            'limo_booking',
+            ['rental_id' => $rental->id]
+        );
     }
 
     /**

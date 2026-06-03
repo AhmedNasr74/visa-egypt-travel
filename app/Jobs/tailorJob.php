@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\tailorEmailMail;
+use App\Services\DualEmailSender;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -48,16 +49,21 @@ class serviceJob implements ShouldQueue
 
     public function handle()
     {
-        \Mail::to($this->email)->send(new serviceEmailMail(
-            $this->name,
-            $this->phone,
+        DualEmailSender::sendGuest(
             $this->email,
-            $this->nationality,
-            $this->adults,
-            $this->childs,
-            $this->infants,
-            $this->budget,
-            $this->info
-        ));
+            new serviceEmailMail(
+                $this->name,
+                $this->phone,
+                $this->email,
+                $this->nationality,
+                $this->adults,
+                $this->childs,
+                $this->infants,
+                $this->budget,
+                $this->info
+            ),
+            'tailor_service_job',
+            ['email' => $this->email]
+        );
     }
 }

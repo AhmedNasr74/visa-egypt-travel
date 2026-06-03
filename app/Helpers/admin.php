@@ -2,6 +2,7 @@
 
 
 use App\Enums\SettingKey;
+use App\Helpers\EmailHelper;
 use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\User;
@@ -40,7 +41,9 @@ if (!function_exists('email')) {
      */
     function email(): string
     {
-        return setting(SettingKey::CONTACT_EMAIL->value, true) ?? "test@g.com";
+        $inbox = EmailHelper::getPrimaryInbox();
+
+        return $inbox !== '' ? $inbox : (setting(SettingKey::CONTACT_EMAIL->value, true) ?? 'test@g.com');
     }
 
 
@@ -107,29 +110,7 @@ if (!function_exists('admin_notification_emails')) {
      */
     function admin_notification_emails(): array
     {
-        $emails = [];
-
-        $contact = setting(SettingKey::CONTACT_EMAIL->value);
-        if (is_array($contact)) {
-            foreach ($contact as $address) {
-                $address = is_string($address) ? trim($address) : '';
-                if ($address !== '' && filter_var($address, FILTER_VALIDATE_EMAIL)) {
-                    $emails[] = $address;
-                }
-            }
-        }
-
-        $notificationList = setting(SettingKey::NOTIFICATION_EMAILS->value);
-        if (is_array($notificationList)) {
-            foreach ($notificationList as $address) {
-                $address = is_string($address) ? trim($address) : '';
-                if ($address !== '' && filter_var($address, FILTER_VALIDATE_EMAIL)) {
-                    $emails[] = $address;
-                }
-            }
-        }
-
-        return array_values(array_unique($emails));
+        return EmailHelper::getNotificationRecipientEmails();
     }
 }
 
