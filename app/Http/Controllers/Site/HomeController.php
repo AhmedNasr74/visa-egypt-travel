@@ -14,6 +14,7 @@ use App\Models\Destination;
 use App\Models\Page;
 use App\Models\Setting;
 use App\Models\Tour;
+use App\Support\SiteSeo;
 use Illuminate\Http\Request;
 use App\Services\DualEmailSender;
 use Illuminate\Support\Facades\Validator;
@@ -42,7 +43,19 @@ class HomeController extends Controller
         $categories = Category::where('enabled', true)->get();
         $countries = Country::select("name", "flag")->get();
         $blogs = Blog::orderBy('id', 'desc')->get();
-        $page = Page::byKey('home')->firstOrNew();
+        $page = Page::byKey('home')->with('seo')->first();
+        if ($page) {
+            $page->publish();
+        } else {
+            SiteSeo::publishPage(
+                SiteSeo::siteName(),
+                SiteSeo::siteDescription(),
+                SiteSeo::defaultImage()
+            );
+        }
+
+        $page = $page ?? Page::byKey('home')->firstOrNew();
+
         return view('site.home.index', compact('page','packages','offers', 'slider', 'blogs', 'destinations', 'categories', 'countries'));
     }
 

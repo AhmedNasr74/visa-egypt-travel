@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Mail\LimoBookingAdminMail;
+use App\Support\SiteSeo;
 use App\Mail\LimoBookingGuestMail;
 use App\Models\CarRental;
 use App\Models\CarRoute;
@@ -91,6 +92,11 @@ class LimoController extends Controller
             'vehicle_car_type' => $vehicle['car_type'],
             'vehicle_image' => $vehicle['image'],
         ];
+
+        SiteSeo::publishPage(
+            'Complete Your Limo Booking',
+            'Complete your airport transfer, travel, or city ride booking with ' . SiteSeo::siteName() . '.'
+        );
 
         return view('site.limo.completing-booking', compact('limoPrefill'));
     }
@@ -335,6 +341,11 @@ class LimoController extends Controller
             $limoAirportDestinations,
             $limoTravelLocations,
             $limoCityLocations
+        );
+
+        SiteSeo::publishPage(
+            'Airport Transfer & Limo',
+            'Book airport transfers, inter-city travel, and city rides in Egypt with ' . SiteSeo::siteName() . '.'
         );
 
         return view('site.limo.new-home', [

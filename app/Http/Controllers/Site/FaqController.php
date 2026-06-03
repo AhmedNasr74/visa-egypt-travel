@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Faq;
 use App\Models\FaqCategory;
+use App\Support\SiteSeo;
 
 
 class FaqController extends Controller
@@ -21,6 +22,8 @@ class FaqController extends Controller
                 $faqs = Faq::all();
 
         }
-    return view('site.faq.index',compact('faqs',"categories"));
-}
+        SiteSeo::publishPage(__('site.faq'), SiteSeo::siteDescription());
+
+        return view('site.faq.index',compact('faqs',"categories"));
+    }
 }

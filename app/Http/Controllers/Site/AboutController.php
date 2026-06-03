@@ -8,6 +8,7 @@ use App\Models\Tour;
 use App\Enums\SettingKey;
 use App\Models\Setting;
 use App\Models\Comment;
+use App\Support\SiteSeo;
 
 
 class AboutController extends Controller
@@ -16,15 +17,21 @@ class AboutController extends Controller
     {
         $employees=Employee::all();
         $comments=Comment::all();
-        
+
+        SiteSeo::publishPage(__('site.about_us'), SiteSeo::siteDescription());
+
         return view('site.about.index',compact('employees','comments'));
     }
     public function terms()
     {
+        SiteSeo::publishPage(__('site.terms_and_conditions'), SiteSeo::siteDescription());
+
         return view('site.terms.index');
     }
     public function privacy()
     {
+        SiteSeo::publishPage(__('site.privacy_policy'), SiteSeo::siteDescription());
+
         return view('site.privacy.index');
     }
     public function teams(){

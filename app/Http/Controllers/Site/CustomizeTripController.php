@@ -8,6 +8,7 @@ use App\Models\CustomizedCategory;
 use App\Models\CustomizedTrip;
 use App\Models\Country;
 use App\Services\DualEmailSender;
+use App\Support\SiteSeo;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,6 +18,8 @@ class CustomizeTripController extends Controller
     public function index(){
         $destinations = CustomizedCategory::all();
         $countries = Country::all();
+
+        SiteSeo::publishPage(__('site.customize_trip'), 'Plan your tailor-made Egypt trip with ' . SiteSeo::siteName() . '.');
 
         return view('site.customize_trip.index', compact('destinations', 'countries'));
     }

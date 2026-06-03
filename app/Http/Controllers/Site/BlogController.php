@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Support\SiteSeo;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,16 +23,20 @@ class BlogController extends Controller
             $last_blogs = Blog::orderBy('id', 'desc')->take(5)->get();
             $categories=BlogCategory::all();
             $popularTags=$this->pop_tags();
+            SiteSeo::publishPage(__('site.blog'), SiteSeo::siteDescription());
+
             return view('site.blog.index',compact('blogs','now','last_blogs','categories','popularTags'));
     }
     public function details($id){
-        $blog = blog::where('id', $id)
-        ->with(['category'])
-        ->firstOrFail();
+        $blog = Blog::where('id', $id)
+            ->with(['category', 'seo'])
+            ->firstOrFail();
+        $blog->publish();
         $last_blogs = Blog::orderBy('id', 'desc')->take(3)->get();
         $now = Carbon::now();
         $categories=BlogCategory::all();
         $popularTags=$this->pop_tags();
+
         return view('site.blog.show', compact('blog','last_blogs','now','categories','popularTags'));
     }
     public function blog_category($id){

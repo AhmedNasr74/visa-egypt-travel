@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ContactUsMail;
 use App\Models\Contact;
 use App\Services\DualEmailSender;
+use App\Support\SiteSeo;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,8 @@ class ContactController extends Controller
 {
     public function index()
     {
+        SiteSeo::publishPage(__('site.contact'), SiteSeo::siteDescription());
+
         return view('site.contact.index');
     }
 

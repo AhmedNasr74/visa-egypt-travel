@@ -1,7 +1,5 @@
 @extends('layouts.site.app')
 
-@section('document_title', 'Complete Your Booking — Limo')
-
 @section('content')
     <div class="min-h-screen bg-zinc-100 font-[Inter,system-ui,sans-serif] antialiased">
         @include('site.limo._completing_booking_body')

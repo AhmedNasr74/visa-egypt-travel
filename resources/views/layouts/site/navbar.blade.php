@@ -72,7 +72,7 @@
                     <img
                         style="width: 170px;"
                         src="{{ logo() }}"
-                        alt="logo image"
+                        alt="{{ $site }} logo"
                     />
                 </a>
             </div>

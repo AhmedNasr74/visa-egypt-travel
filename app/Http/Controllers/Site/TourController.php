@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Country;
 use App\Models\Destination;
 use App\Models\Tour;
+use App\Support\SiteSeo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,10 @@ class TourController extends Controller
             ->whereTranslation('slug', $destination)
             ->orWhere('id', $destination))
             ->firstOrFail();
-        $category = Category::where(fn($query) => $query->whereTranslation('slug', $category))->firstOrFail();
+        $category = Category::where(fn($query) => $query->whereTranslation('slug', $category))
+            ->with('seo')
+            ->firstOrFail();
+        $category->publish();
 
         $query = Tour::whereHas('destinations', fn($q) => $q->whereId($destination->id))
             ->whereHas('categories', fn($q) => $q->whereId($category->id));
@@ -54,7 +58,7 @@ class TourController extends Controller
         $tour = Tour::where('enabled', true)
             ->whereHas('translations', function ($query) use ($slug) {
                 $query->where('slug', $slug);
-            })->with(['categories', 'destinations', 'seasons', 'discount', 'raise'])
+            })->with(['categories', 'destinations', 'seasons', 'discount', 'raise', 'seo'])
             ->firstOrFail();
         $tour->publish();
         $comments = $tour->comments()->take(5)->get();
@@ -182,7 +186,8 @@ class TourController extends Controller
 
     public function NileCruise()
     {
-        $nile_cruise = Category::with('children')->whereTranslation('slug', 'nile-cruise')->firstOrFail();
+        $nile_cruise = Category::with(['children', 'seo'])->whereTranslation('slug', 'nile-cruise')->firstOrFail();
+        $nile_cruise->publish();
         $catIds = $nile_cruise->children->pluck('id')->merge([$nile_cruise->id])->toArray();
         $tours = Tour::whereHas('categories', fn($q) => $q->wherein('id', $catIds))->limit(6)->get();
         $countries = Country::all();
@@ -193,11 +198,14 @@ class TourController extends Controller
     public function NileCruiseDetails($slug)
     {
 
-        $category = Category::where(fn($query) => $query->whereTranslation('slug', $slug))->first();
+        $category = Category::with('seo')->where(fn($query) => $query->whereTranslation('slug', $slug))->first();
         $tours = null;
         if ($category) {
+            $category->publish();
             $tours = Tour::whereHas('categories', fn($q) => $q->whereId($category->id))
                 ->get();
+        } else {
+            SiteSeo::publishPage(__('site.nile_cruise'), SiteSeo::siteDescription());
         }
         return view('site.nile-cruise.details', compact('tours'));
     }

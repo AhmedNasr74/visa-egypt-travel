@@ -1,7 +1,5 @@
 @extends('layouts.site.app')
 
-@section('document_title', 'New Home — Limo')
-
 @section('content')
     <div class="limo-font antialiased">
         @include('site.limo._new_home_body', [

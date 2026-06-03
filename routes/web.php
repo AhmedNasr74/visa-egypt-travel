@@ -22,9 +22,18 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
+use App\Http\Controllers\Site\SitemapController;
+
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/client.php';
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', function () {
+    $body = "User-agent: *\nAllow: /\n\nSitemap: " . url('/sitemap.xml') . "\n";
+
+    return response($body, 200)->header('Content-Type', 'text/plain');
+})->name('robots');
 
 
 Route::get('/dashboard', function () {

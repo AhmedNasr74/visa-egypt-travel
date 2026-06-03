@@ -1,14 +1,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     {!! SEO::generate(true) !!}
-    <title>@hasSection('document_title')@yield('document_title')@else{{ setting(\App\Enums\SettingKey::SITE_TITLE->value, true) }}@endif</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- favicon -->
-    <link rel=icon href="{{ icon() }}" sizes="20x20" type="image/png">
+    <link rel="icon" href="{{ icon() }}" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="{{ icon() }}">
 
     <!-- Additional plugin css -->
 

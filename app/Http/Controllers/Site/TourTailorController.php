@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\TailorMadeMail;
 use App\Models\Destination;
 use App\Services\DualEmailSender;
+use App\Support\SiteSeo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,6 +17,8 @@ class TourTailorController extends Controller
     public function index()
     {
         $destinations = Destination::all();
+        SiteSeo::publishPage(__('site.tour_tailor'), 'Create your custom Egypt tour itinerary with ' . SiteSeo::siteName() . '.');
+
         return view('site.tour_tailor.index', compact('destinations'));
     }
 
