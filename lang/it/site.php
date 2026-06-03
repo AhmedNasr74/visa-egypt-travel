@@ -1207,4 +1207,5 @@ return [
     'limo_js_network' => 'Network error. Please try again.',
     'limo_js_generic_error' => 'Something went wrong. Please try again.',
     'limo_js_location_fallback' => 'Location :id',
+    'limo_cb_booking_progress' => 'Booking progress',
 ];

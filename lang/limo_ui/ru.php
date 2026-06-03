@@ -68,6 +68,7 @@ return [
     'limo_learn_more' => 'Подробнее',
     'limo_close_video' => 'Закрыть видео',
     'limo_video_title' => 'Рекламное видео',
+    'limo_cb_booking_progress' => 'Ход бронирования',
     'limo_cb_step_flight' => 'Данные рейса',
     'limo_cb_step_trip' => 'Детали поездки',
     'limo_cb_step_booking' => 'Детали бронирования',

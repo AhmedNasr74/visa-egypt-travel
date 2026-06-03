@@ -1,6 +1,6 @@
 <header
       class="border-l-4 border-blue-600 bg-black pb-32 pt-11 text-white sm:pb-32 sm:pt-16"
-      aria-label="Booking progress"
+      aria-label="{{ __('site.limo_cb_booking_progress') }}"
     >
       <div class="mx-auto max-w-4xl px-4 sm:px-6">
         <div class="flex items-start justify-between gap-2 sm:gap-4" id="cb-stepper" role="list">
@@ -8,7 +8,7 @@
             <div
               class="flex w-full flex-col items-center"
               role="listitem"
-              aria-label="Step 1 Flight Details"
+              aria-label="{{ __('site.limo_cb_step_flight_aria') }}"
             >
               <div
                 data-step-circle
@@ -36,7 +36,7 @@
           </div>
           <div class="mx-1 mt-4 h-px min-w-[1rem] flex-1 bg-violet-500/50 sm:mt-5 sm:min-w-[2rem]" aria-hidden="true"></div>
           <div class="flex flex-1 items-start" data-cb-step-index="2">
-            <div class="flex w-full flex-col items-center" role="listitem" aria-label="Step 2 Booking Details">
+            <div class="flex w-full flex-col items-center" role="listitem" aria-label="{{ __('site.limo_cb_step_booking_aria') }}">
               <div
                 data-step-circle
                 class="flex h-9 w-9 shrink-0 items-center justify-center rounded border-2 text-sm font-bold transition-colors sm:h-10 sm:w-10"
@@ -57,7 +57,7 @@
           </div>
           <div class="mx-1 mt-4 h-px min-w-[1rem] flex-1 bg-violet-500/50 sm:mt-5 sm:min-w-[2rem]" aria-hidden="true"></div>
           <div class="flex flex-1 items-start" data-cb-step-index="3">
-            <div class="flex w-full flex-col items-center" role="listitem" aria-label="Step 3 Passenger Details">
+            <div class="flex w-full flex-col items-center" role="listitem" aria-label="{{ __('site.limo_cb_step_passenger_aria') }}">
               <div
                 data-step-circle
                 class="flex h-9 w-9 shrink-0 items-center justify-center rounded border-2 text-sm font-bold transition-colors sm:h-10 sm:w-10"
@@ -78,7 +78,7 @@
           </div>
           <div class="mx-1 mt-4 h-px min-w-[1rem] flex-1 bg-violet-500/50 sm:mt-5 sm:min-w-[2rem]" aria-hidden="true"></div>
           <div class="flex flex-1 items-start" data-cb-step-index="4">
-            <div class="flex w-full flex-col items-center" role="listitem" aria-label="Step 4 Payment">
+            <div class="flex w-full flex-col items-center" role="listitem" aria-label="{{ __('site.limo_cb_step_payment_aria') }}">
               <div
                 data-step-circle
                 class="flex h-9 w-9 shrink-0 items-center justify-center rounded border-2 text-sm font-bold transition-colors sm:h-10 sm:w-10"

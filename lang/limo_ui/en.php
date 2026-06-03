@@ -68,6 +68,7 @@ return [
     'limo_learn_more' => 'Learn More',
     'limo_close_video' => 'Close video',
     'limo_video_title' => 'Promotional video',
+    'limo_cb_booking_progress' => 'Booking progress',
     'limo_cb_step_flight' => 'Flight Details',
     'limo_cb_step_trip' => 'Trip Details',
     'limo_cb_step_booking' => 'Booking Details',

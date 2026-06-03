@@ -1201,4 +1201,5 @@ return [
     'limo_js_network' => 'Ошибка сети. Попробуйте снова.',
     'limo_js_generic_error' => 'Что-то пошло не так. Попробуйте снова.',
     'limo_js_location_fallback' => 'Место :id',
+    'limo_cb_booking_progress' => 'Ход бронирования',
 ];
