@@ -78,18 +78,18 @@
 <body>
   <div class="container">
     <div style="text-align:center;">
-        <a href="https://holidaypackage.perfectsolutions4u.com/" title="logo" target="_blank">
+        <a href="https://visaegypttravel.com/" title="logo" target="_blank">
             <img width="60" src="{{ App\Models\Setting::firstWhere('option_key', \App\Enums\SettingKey::LOGO->value)->option_value[0] }}" title="logo" alt="logo">
         </a>
-        <a href="https://holidaypackage.perfectsolutions4u.com/" title="logo" target="_blank">
-            <img width="60" src="http://holidaypackage.perfectsolutions4u.com/storage/media/logo.png" title="logo" alt="logo">
+        <a href="https://visaegypttravel.com/" title="logo" target="_blank">
+            <img width="60" src="http://visaegypttravel.com/storage/media/logo.png" title="logo" alt="logo">
         </a>
       </div>
 
         <h1>Hi Sir,</h1>
     <p>{{$requestData['title']}}</p>
     <p>{!!$requestData['mail']!!}</p>
-    <p class="footer">&copy; <strong>https://holidaypackage.perfectsolutions4u.com/</strong></p>
+    <p class="footer">&copy; <strong>https://visaegypttravel.com/</strong></p>
   </div>
 </body>
 
