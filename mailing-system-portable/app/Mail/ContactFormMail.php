@@ -32,8 +32,8 @@ class ContactFormMail extends Mailable
     public function build()
     {
         $subject = $this->type === 'booking' 
-            ? 'New Booking Contact Form - Egypt In Style Tours'
-            : 'New Contact Form Submission - Egypt In Style Tours';
+            ? 'New Booking Contact Form - Visa Egypt Travel'
+            : 'New Contact Form Submission - Visa Egypt Travel';
 
         $view = $this->type === 'booking' 
             ? 'emails.contact_form_admin'

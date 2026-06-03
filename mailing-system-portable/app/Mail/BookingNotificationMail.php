@@ -33,7 +33,7 @@ class BookingNotificationMail extends Mailable
     public function build()
     {
         $subject = $this->type === 'booking' 
-            ? 'New Booking - Egypt In Style Tours'
+            ? 'New Booking - Visa Egypt Travel'
             : 'New Contact Form Submission - Egypt In Style Tours';
 
         $view = $this->type === 'booking' 

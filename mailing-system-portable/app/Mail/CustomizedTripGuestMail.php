@@ -21,7 +21,7 @@ class CustomizedTripGuestMail extends Mailable
     public function build(): self
     {
         return $this
-            ->subject('Your Customize Trip Request - Egypt In Style Tours')
+            ->subject('Your Customize Trip Request - Visa Egypt Travel')
             ->view('emails.customized_trip_guest')
             ->with('data', $this->data);
     }

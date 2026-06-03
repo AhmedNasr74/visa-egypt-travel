@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>New Booking Contact Form - Egypt In Style Tours</title>
+    <title>New Booking Contact Form - Visa Egypt Travel</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -110,7 +110,7 @@
     <div class="email-container">
         <div class="header">
             <h1>🏛️ New Booking Contact Form</h1>
-            <p>Egypt In Style Tours</p>
+            <p>Visa Egypt Travel</p>
         </div>
         <div class="content">
             <h2>Hello Admin,</h2>
@@ -320,7 +320,7 @@
         </div>
         <div class="footer">
             <p>This email was automatically generated from your website booking contact form.</p>
-            <p>&copy; {{ date('Y') }} Egypt In Style Tours. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} Visa Egypt Travel. All rights reserved.</p>
         </div>
     </div>
 </body>

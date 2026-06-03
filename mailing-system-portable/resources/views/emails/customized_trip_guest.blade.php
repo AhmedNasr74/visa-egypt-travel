@@ -26,6 +26,6 @@
     </table>
 
     <p style="margin-top: 24px;">If you have any questions, reply to this email or contact us at {{ \App\Helpers\EmailHelper::BOOKING_NOTIFICATION_EMAIL }}.</p>
-    <p>Best regards,<br>Egypt In Style Tours</p>
+    <p>Best regards,<br>Visa Egypt Travel</p>
 </body>
 </html>

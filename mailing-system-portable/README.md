@@ -1,6 +1,6 @@
 # Dual-recipient mailing system (portable)
 
-Laravel mailing package extracted from **Egypt In Style Tours**. Sends **admin notification** and **guest confirmation** for:
+Laravel mailing package extracted from **Visa Egypt Travel**. Sends **admin notification** and **guest confirmation** for:
 
 - Homepage / contact forms
 - Customize-your-trip requests
@@ -271,7 +271,7 @@ Look for:
 
 1. Zip or copy folder: `mailing-system-portable/`
 2. Follow **Quick install** above.
-3. Replace hardcoded `info@egyptinstyletours.com` in old `BookController` with `DualEmailSender` + `getNotificationRecipientEmails()`.
+3. Replace hardcoded `info@visaegypttravel.com.` in old `BookController` with `DualEmailSender` + `getNotificationRecipientEmails()`.
 4. Update guest blade templates: replace `EmailHelper::BOOKING_NOTIFICATION_EMAIL` with `EmailHelper::getPrimaryInbox()` if you change brands.
 5. Run `php artisan config:clear` after `.env` changes.
 
@@ -279,6 +279,6 @@ Look for:
 
 ## Version / origin
 
-- **Source project:** Egypt In Style Tours (Laravel)
+- **Source project:** Visa Egypt Travel (Laravel)
 - **Pattern:** Synchronous dual-recipient mail (admin + guest)
 - **Last packaged:** 2026-06-03

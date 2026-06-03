@@ -18,8 +18,8 @@ class ContactFormGuestMail extends Mailable
     public function build(): self
     {
         $subject = $this->isBooking
-            ? 'We Received Your Booking Inquiry - Egypt In Style Tours'
-            : 'We Received Your Message - Egypt In Style Tours';
+            ? 'We Received Your Booking Inquiry - Visa Egypt Travel'
+            : 'We Received Your Message - Visa Egypt Travel';
 
         return $this
             ->subject($subject)

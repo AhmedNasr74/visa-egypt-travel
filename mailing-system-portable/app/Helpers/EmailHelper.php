@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class EmailHelper
 {
-    public const BOOKING_NOTIFICATION_EMAIL = 'info@egyptinstyletours.com';
+    public const BOOKING_NOTIFICATION_EMAIL = 'info@visaegypttravel.com.';
 
     public static function getAdminEmail(): string
     {

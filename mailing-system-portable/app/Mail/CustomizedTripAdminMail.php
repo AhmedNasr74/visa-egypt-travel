@@ -21,7 +21,7 @@ class CustomizedTripAdminMail extends Mailable
     public function build(): self
     {
         return $this
-            ->subject('New Customize Your Trip Request - Egypt In Style Tours')
+            ->subject('New Customize Your Trip Request - Visa Egypt Travel')
             ->view('emails.customized_trip_admin')
             ->with('data', $this->data);
     }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Thank You - Egypt In Style Tours</title>
+    <title>Thank You - Visa Egypt Travel</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <h2 style="color: #2c5530;">Thank you, {{ $data['name'] }}!</h2>
@@ -15,6 +15,6 @@
     </table>
 
     <p style="margin-top: 24px;">If you need immediate assistance, contact us at {{ \App\Helpers\EmailHelper::BOOKING_NOTIFICATION_EMAIL }}.</p>
-    <p>Best regards,<br>Egypt In Style Tours</p>
+    <p>Best regards,<br>Visa Egypt Travel</p>
 </body>
 </html>
