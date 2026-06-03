@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DestinationSeeder::class);
         $this->call(SliderSeeder::class);
         $this->call(PageSeeder::class);
+        $this->call(FaqSeeder::class);
         $this->call(PermissionsSeeder::class);
     }
 }
