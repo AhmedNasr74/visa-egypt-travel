@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Mail\LimoBookingAdminMail;
+use App\Mail\LimoBookingGuestMail;
 use App\Models\CarRental;
 use App\Models\CarRoute;
 use App\Models\Currency;
@@ -94,8 +95,15 @@ class LimoController extends Controller
         return view('site.limo.completing-booking', compact('limoPrefill'));
     }
 
-    private function notifyAdminsOfLimoBooking(CarRental $rental): void
+    private function sendLimoBookingEmails(CarRental $rental): void
     {
+        DualEmailSender::sendGuest(
+            $rental->email,
+            new LimoBookingGuestMail($rental),
+            'limo_booking',
+            ['rental_id' => $rental->id]
+        );
+
         DualEmailSender::sendAdmin(
             new LimoBookingAdminMail($rental),
             'limo_booking',
@@ -287,13 +295,13 @@ class LimoController extends Controller
             'email' => $validated['email'],
             'phone' => $validated['phone'],
             'nationality' => $validated['nationality'] ?? null,
-            'notes' => $validated['notes'] ?? null,
+            'notes' => trim((string) ($validated['notes'] ?? '')),
             'currency_id' => $currency?->id,
             'currency_exchange_rate' => $currency !== null ? (float)$currency->exchange_rate : 1.0,
         ]);
 
         $rental->load(['pickup', 'destination', 'currency']);
-        $this->notifyAdminsOfLimoBooking($rental);
+        $this->sendLimoBookingEmails($rental);
 
         return response()->json([
             'ok' => true,
