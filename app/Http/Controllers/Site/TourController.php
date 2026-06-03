@@ -55,10 +55,10 @@ class TourController extends Controller
     public function tour_details(Request $request, $slug)
     {
 
-        $tour = Tour::where('enabled', true)
-            ->whereHas('translations', function ($query) use ($slug) {
-                $query->where('slug', $slug);
-            })->with(['categories', 'destinations', 'seasons', 'discount', 'raise', 'seo'])
+        $tour = Tour::query()
+            ->where('enabled', true)
+            ->where('slug', $slug)
+            ->with(['categories', 'destinations', 'seasons', 'discount', 'raise', 'seo'])
             ->firstOrFail();
         $tour->publish();
         $comments = $tour->comments()->take(5)->get();

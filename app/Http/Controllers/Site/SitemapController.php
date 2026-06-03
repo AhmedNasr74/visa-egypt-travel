@@ -24,17 +24,13 @@ class SitemapController extends Controller
 
         Tour::query()
             ->where('enabled', true)
-            ->with(['translations' => fn ($q) => $q->select('tour_id', 'locale', 'slug')])
-            ->get()
+            ->whereNotNull('slug')
+            ->where('slug', '!=', '')
+            ->get(['id', 'slug', 'updated_at'])
             ->each(function (Tour $tour) use (&$urls, $now, $locales) {
                 foreach ($locales as $locale) {
-                    $translation = $tour->translate($locale);
-                    $slug = $translation?->slug ?? $tour->slug;
-                    if (!$slug) {
-                        continue;
-                    }
                     $urls[] = $this->entry(
-                        LaravelLocalization::getLocalizedURL($locale, 'tour-details/' . $slug),
+                        LaravelLocalization::getLocalizedURL($locale, 'tour-details/' . $tour->slug),
                         $tour->updated_at?->toAtomString() ?? $now,
                         'weekly',
                         '0.9'
