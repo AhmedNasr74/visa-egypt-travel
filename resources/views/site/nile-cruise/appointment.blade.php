@@ -220,7 +220,7 @@
                 toastr.success(response.data.message)
                 $(this).trigger('reset')
             }).catch(error => {
-                toastr.error(error.response.data.message)
+                toastr.error(error.response?.data?.error ?? error.response?.data?.message ?? '{{ __('main.unexpected-error') }}')
             }).finally(() => {
                 $('#appointment-btn').attr('disabled', false).children('i').remove()
             })

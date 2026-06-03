@@ -89,7 +89,10 @@ class HomeController extends Controller
             }
             
             $data = $validator->validated();
-            
+
+            // Empty optional notes become null via middleware; DB column is NOT NULL.
+            $data['notes'] = trim((string) ($data['notes'] ?? ''));
+
             // Process array fields for Nile Cruise
             if ($isNileCruise) {
                 $data['cruise_type'] = is_array($data['cruise_type']) ? implode(', ', array_filter($data['cruise_type'])) : $data['cruise_type'];
@@ -129,7 +132,9 @@ class HomeController extends Controller
             \Log::error('Stack trace: ' . $exception->getTraceAsString());
             report($exception);
             return response()->json([
-                'message' => $exception->getMessage() ?? __('main.internal-server-error')
+                'error' => config('app.debug')
+                    ? $exception->getMessage()
+                    : __('main.unexpected-error'),
             ], 500);
         }
     }
