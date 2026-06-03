@@ -14,6 +14,7 @@
 @endpush
 
 @push('js')
+    @include('site.limo.partials.limo_i18n')
     <script>
         window.LIMO_COMPLETING_PREFILL = @json($limoPrefill ?? null);
         window.LIMO_BOOKING_STORE_URL = @json(route('site.limo.complete-booking.store'));

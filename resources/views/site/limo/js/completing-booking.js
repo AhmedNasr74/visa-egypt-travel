@@ -1,6 +1,26 @@
 (function () {
     "use strict";
 
+    var cbI18n =
+        typeof window.LIMO_CB_I18N === "object" && window.LIMO_CB_I18N !== null
+            ? window.LIMO_CB_I18N
+            : {};
+
+    function cbT(key, fallback) {
+        var v = cbI18n[key];
+        return v != null && v !== "" ? v : fallback;
+    }
+
+    function cbPlaceholder() {
+        return cbT("placeholder", "—");
+    }
+
+    function formatPaxSeats(n) {
+        var count = parseInt(n, 10) || 1;
+        var tpl = count === 1 ? cbT("seat", ":count seat") : cbT("seats", ":count seats");
+        return tpl.replace(":count", String(count));
+    }
+
     var pages = [];
     var currentScreen = 1;
     var passengerPhase = "form";
@@ -98,13 +118,15 @@
         });
         var step1Label = $("#cb-step1-label");
         if (step1Label) {
-            step1Label.textContent = isCity ? "Trip Details" : "Flight Details";
+            step1Label.textContent = isCity
+                ? cbT("step_trip", "Trip Details")
+                : cbT("step_flight", "Flight Details");
         }
         var step1Item = document.querySelector('[data-cb-step-index="1"] [role="listitem"]');
         if (step1Item) {
             step1Item.setAttribute(
                 "aria-label",
-                isCity ? "Step 1 Trip Details" : "Step 1 Flight Details"
+                isCity ? cbT("step_trip_aria", "Step 1 Trip Details") : cbT("step_flight_aria", "Step 1 Flight Details")
             );
         }
     }
@@ -162,9 +184,9 @@
 
     function summaryPickupLine() {
         if (booking.serviceType === "city") {
-            return booking.routePickup || "—";
+            return booking.routePickup || cbPlaceholder();
         }
-        var base = booking.routePickup || "—";
+        var base = booking.routePickup || cbPlaceholder();
         if (booking.serviceType === "airport") {
             return base + (booking.terminal ? " - " + booking.terminal : "");
         }
@@ -173,31 +195,31 @@
 
     function summaryDropHeading() {
         if (booking.serviceType === "city") {
-            return "Service";
+            return cbT("service", "Service");
         }
         if (booking.serviceType === "travel") {
-            return "Destination";
+            return cbT("destination", "Destination");
         }
-        return "Drop-off";
+        return cbT("dropoff", "Drop-off");
     }
 
     function summaryDropTitle() {
         if (booking.serviceType === "city") {
-            return booking.cityHoursLabel || "City ride";
+            return booking.cityHoursLabel || cbT("city_ride", "City ride");
         }
-        return booking.routeDrop || "—";
+        return booking.routeDrop || cbPlaceholder();
     }
 
     function summaryDropSub() {
         if (booking.serviceType === "city" && booking.routePickup) {
-            return "In " + booking.routePickup;
+            return cbT("in_city", "In :place").replace(":place", booking.routePickup);
         }
         return "";
     }
 
     function formatEgp(n) {
         if (!isFinite(n) || n <= 0) {
-            return "—";
+            return cbPlaceholder();
         }
         return "$" + String(Math.round(n));
     }
@@ -205,13 +227,13 @@
     function syncBookingToDom() {
         if (!isCityRide()) {
             $all("[data-bind='flight-number']").forEach(function (el) {
-                el.textContent = booking.flightNumber || "—";
+                el.textContent = booking.flightNumber || cbPlaceholder();
             });
             $all("[data-bind='airline']").forEach(function (el) {
-                el.textContent = booking.airline || "—";
+                el.textContent = booking.airline || cbPlaceholder();
             });
             $all("[data-bind='terminal']").forEach(function (el) {
-                el.textContent = booking.terminal || "—";
+                el.textContent = booking.terminal || cbPlaceholder();
             });
         }
         $all("[data-bind='pickup-datetime']").forEach(function (el) {
@@ -227,23 +249,23 @@
         if (addrInput) addrInput.value = booking.address || "";
 
         $all("[data-bind='route-pickup']").forEach(function (el) {
-            el.textContent = booking.routePickup || "—";
+            el.textContent = booking.routePickup || cbPlaceholder();
         });
         $all("[data-bind='route-drop']").forEach(function (el) {
             if (booking.serviceType === "city") {
-                el.textContent = booking.cityHoursLabel || booking.routePickup || "—";
+                el.textContent = booking.cityHoursLabel || booking.routePickup || cbPlaceholder();
             } else {
-                el.textContent = booking.routeDrop || "—";
+                el.textContent = booking.routeDrop || cbPlaceholder();
             }
         });
 
-        var tripLbl = "Trip price";
+        var tripLbl = cbT("trip_price", "Trip price");
         if (booking.serviceType === "city") {
-            tripLbl = booking.cityHoursLabel || "City ride price";
+            tripLbl = booking.cityHoursLabel || cbT("city_ride_price", "City ride price");
         } else if (booking.tripRound) {
-            tripLbl = "Round trip price";
+            tripLbl = cbT("round_trip_price", "Round trip price");
         } else {
-            tripLbl = "One way trip price";
+            tripLbl = cbT("one_way_trip_price", "One way trip price");
         }
         $all("[data-bind='trip-price-label']").forEach(function (el) {
             el.textContent = tripLbl;
@@ -260,12 +282,12 @@
             descEl.classList.toggle("hidden", !booking.vehicleCarType);
         }
 
-        var priceText = booking.vehiclePriceEgp != null ? formatEgp(booking.vehiclePriceEgp) : "—";
+        var priceText = booking.vehiclePriceEgp != null ? formatEgp(booking.vehiclePriceEgp) : cbPlaceholder();
         $all("[data-bind='vehicle-price']").forEach(function (el) {
             el.textContent = priceText;
         });
 
-        var paxLabel = booking.paxCount === 1 ? "1 seat" : booking.paxCount + " seats";
+        var paxLabel = formatPaxSeats(booking.paxCount);
         $all("[data-bind='pax-seats']").forEach(function (el) {
             el.textContent = paxLabel;
         });
@@ -273,9 +295,9 @@
         var sub = $("#cb-header-subtitle");
         if (sub) {
             var typeLine = {
-                airport: "Airport limousine",
-                travel: "Travel limousine",
-                city: "City ride"
+                airport: cbT("airport_limo", "Airport limousine"),
+                travel: cbT("travel_limo", "Travel limousine"),
+                city: cbT("city_ride", "City ride")
             };
             var t1 = typeLine[booking.serviceType] || "Limo";
             if (booking.serviceType === "city") {
@@ -283,7 +305,7 @@
                     ? booking.cityHoursLabel + " · " + t1
                     : t1;
             } else {
-                var t2 = booking.tripRound ? "Round trip" : "One way";
+                var t2 = booking.tripRound ? cbT("round_trip", "Round trip") : cbT("one_way", "One way");
                 sub.textContent = t2 + " · " + t1;
             }
         }
@@ -309,36 +331,36 @@
             el.textContent =
                 booking.vehiclePriceEgp != null && booking.vehiclePriceEgp > 0
                     ? formatEgp(booking.vehiclePriceEgp)
-                    : "—";
+                    : cbPlaceholder();
         });
 
         if (!isCityRide()) {
             var pn = $("#cb-summary-flight-num");
-            if (pn) pn.textContent = booking.flightNumber || "—";
+            if (pn) pn.textContent = booking.flightNumber || cbPlaceholder();
             var pa = $("#cb-summary-airline");
-            if (pa) pa.textContent = booking.airline || "—";
+            if (pa) pa.textContent = booking.airline || cbPlaceholder();
         }
 
         var uiName = $("#cb-display-name");
         var uiEmail = $("#cb-display-email");
         var uiPhone = $("#cb-display-phone");
         var uiNat = $("#cb-display-nationality");
-        if (uiName) uiName.textContent = userInfo.name || "—";
-        if (uiEmail) uiEmail.textContent = userInfo.email || "—";
-        if (uiPhone) uiPhone.textContent = userInfo.phone || "—";
-        if (uiNat) uiNat.textContent = userInfo.nationality || "—";
+        if (uiName) uiName.textContent = userInfo.name || cbPlaceholder();
+        if (uiEmail) uiEmail.textContent = userInfo.email || cbPlaceholder();
+        if (uiPhone) uiPhone.textContent = userInfo.phone || cbPlaceholder();
+        if (uiNat) uiNat.textContent = userInfo.nationality || cbPlaceholder();
 
         $all("[data-copy-name]").forEach(function (el) {
-            el.textContent = userInfo.name || "—";
+            el.textContent = userInfo.name || cbPlaceholder();
         });
         $all("[data-copy-email]").forEach(function (el) {
-            el.textContent = userInfo.email || "—";
+            el.textContent = userInfo.email || cbPlaceholder();
         });
         $all("[data-copy-phone]").forEach(function (el) {
-            el.textContent = userInfo.phone || "—";
+            el.textContent = userInfo.phone || cbPlaceholder();
         });
         $all("[data-copy-nationality]").forEach(function (el) {
-            el.textContent = userInfo.nationality || "—";
+            el.textContent = userInfo.nationality || cbPlaceholder();
         });
     }
 
@@ -426,7 +448,7 @@
         var p = window.LIMO_COMPLETING_PREFILL || {};
         var pickupId = parseInt(p.pickup_id, 10);
         if (!pickupId || pickupId < 1) {
-            return { error: "Missing pickup location. Please start again from the limo search page." };
+            return { error: cbT("missing_pickup", "Missing pickup location. Please start again from the limo search page.") };
         }
         var destRaw = p.dest_id;
         var destId =
@@ -438,15 +460,15 @@
         }
         var price = booking.vehiclePriceEgp;
         if (price === null || price === undefined || isNaN(price) || price <= 0) {
-            return { error: "Price is missing. Please start again from the limo search page." };
+            return { error: cbT("missing_price", "Price is missing. Please start again from the limo search page.") };
         }
         var timeEl = $("#cb-pickup-time");
         var pickupTimeVal = timeEl && timeEl.value ? timeEl.value : booking.pickupTime;
         if (!pickupTimeVal) {
-            return { error: "Please choose a pickup time." };
+            return { error: cbT("pickup_time", "Please choose a pickup time.") };
         }
         if (!booking.pickupDate) {
-            return { error: "Please choose a pickup date." };
+            return { error: cbT("pickup_date", "Please choose a pickup date.") };
         }
         var carType =
             booking.vehicleCarType && booking.vehicleCarType.trim()
@@ -479,7 +501,7 @@
                 ? window.LIMO_BOOKING_STORE_URL
                 : null;
         if (!url) {
-            limoToast("error", "Booking could not be sent. Please try again later.");
+            limoToast("error", cbT("send_failed", "Booking could not be sent. Please try again later."));
             return;
         }
         var payload = buildLimoBookingPayload();
@@ -489,7 +511,7 @@
         }
         var token = csrfToken();
         if (!token) {
-            limoToast("error", "Security token missing. Refresh the page and try again.");
+            limoToast("error", cbT("csrf", "Security token missing. Refresh the page and try again."));
             return;
         }
         if (btn) {
@@ -517,7 +539,7 @@
                         (result.data && result.data.message) ||
                         (typeof window.LIMO_BOOKING_SUCCESS_MSG === "string"
                             ? window.LIMO_BOOKING_SUCCESS_MSG
-                            : "Thank you! Your booking request has been recorded.");
+                            : cbT("booking_recorded", "Thank you! Your booking request has been recorded."));
                     limoToast("success", msg);
                     var homeUrl =
                         typeof window.LIMO_HOME_URL === "string" && window.LIMO_HOME_URL
@@ -542,10 +564,10 @@
                     });
                     return;
                 }
-                limoToast("error", d.message || "Could not save your booking. Please try again.");
+                limoToast("error", d.message || cbT("save_failed", "Could not save your booking. Please try again."));
             })
             .catch(function () {
-                limoToast("error", "Network error. Please try again.");
+                limoToast("error", cbT("network", "Network error. Please try again."));
             })
             .finally(function () {
                 if (btn) {
@@ -930,7 +952,7 @@
             bookBtn.addEventListener("click", function () {
                 var terms = $("#cb-terms");
                 if (terms && !terms.checked) {
-                    limoToast("error", "Please accept the terms and conditions.");
+                    limoToast("error", cbT("terms", "Please accept the terms and conditions."));
                     return;
                 }
                 submitLimoBooking(bookBtn);

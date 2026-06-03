@@ -30,7 +30,7 @@
                 </svg>
               </div>
               <p id="cb-step1-label" data-step-label class="mt-2 max-w-[4.5rem] text-center text-[10px] font-medium leading-tight text-violet-200 sm:max-w-[5.5rem] sm:text-xs">
-                Flight Details
+                {{ __('site.limo_cb_step_flight') }}
               </p>
             </div>
           </div>
@@ -51,7 +51,7 @@
                 </svg>
               </div>
               <p data-step-label class="mt-2 max-w-[4.5rem] text-center text-[10px] font-medium leading-tight text-violet-200 sm:max-w-[5.5rem] sm:text-xs">
-                Booking Details
+                {{ __('site.limo_cb_step_booking') }}
               </p>
             </div>
           </div>
@@ -72,7 +72,7 @@
                 </svg>
               </div>
               <p data-step-label class="mt-2 max-w-[4.5rem] text-center text-[10px] font-medium leading-tight text-violet-200 sm:max-w-[5.5rem] sm:text-xs">
-                Passenger Details
+                {{ __('site.limo_cb_step_passenger') }}
               </p>
             </div>
           </div>
@@ -93,26 +93,26 @@
                 </svg>
               </div>
               <p data-step-label class="mt-2 max-w-[4.5rem] text-center text-[10px] font-medium leading-tight text-violet-200 sm:max-w-[5.5rem] sm:text-xs">
-                Payment
+                {{ __('site.limo_cb_step_payment') }}
               </p>
             </div>
           </div>
         </div>
 
         <h1 class="mt-16 text-center text-2xl font-bold tracking-tight sm:text-3xl">
-          Complete Your Booking
+          {{ __('site.limo_cb_complete_title') }}
         </h1>
         <p id="cb-header-subtitle" class="mt-2 text-center text-sm text-white/85 sm:text-base">
           @if(($limoPrefill['type'] ?? '') === 'city')
             @if(!empty($limoPrefill['city_hours_label']))
-              {{ $limoPrefill['city_hours_label'] }} · City ride
+              {{ $limoPrefill['city_hours_label'] }} · {{ __('site.limo_cb_city_ride') }}
             @else
-              City ride
+              {{ __('site.limo_cb_city_ride') }}
             @endif
           @else
-            {{ ($limoPrefill['trip'] ?? 'one') === 'round' ? 'Round trip' : 'One way' }}
+            {{ ($limoPrefill['trip'] ?? 'one') === 'round' ? __('site.limo_cb_round_trip') : __('site.limo_cb_one_way') }}
             ·
-            {{ ($limoPrefill['type'] ?? 'airport') === 'travel' ? 'Travel limousine' : 'Airport limousine' }}
+            {{ ($limoPrefill['type'] ?? 'airport') === 'travel' ? __('site.limo_cb_travel_limo') : __('site.limo_cb_airport_limo') }}
           @endif
         </p>
       </div>
@@ -124,9 +124,9 @@
           type="button"
           id="cb-back"
           class="mb-3 text-lg font-medium text-white underline decoration-slate-400 underline-offset-2 transition hover:text-accent-main-color disabled:invisible"
-          aria-label="Go back"
+          aria-label="{{ __('site.limo_cb_go_back_aria') }}"
         >
-          ← Go Back
+          {{ __('site.limo_cb_go_back') }}
         </button>
 
         <!-- Vehicle summary (shared) -->
@@ -154,7 +154,7 @@
                   </p>
                 </div>
                 <div class="text-left sm:text-right">
-                  <p class="text-xs font-medium text-slate-500 sm:text-sm" data-bind="trip-price-label">One way trip price</p>
+                  <p class="text-xs font-medium text-slate-500 sm:text-sm" data-bind="trip-price-label">{{ __('site.limo_cb_one_way_trip_price') }}</p>
                   <p class="mt-1 text-2xl font-bold text-emerald-600 sm:text-3xl" data-bind="vehicle-price">—</p>
                 </div>
               </div>
@@ -167,14 +167,14 @@
                         <circle cx="8" cy="16" r="1" fill="currentColor" />
                         <circle cx="16" cy="16" r="1" fill="currentColor" />
                       </svg>
-                      <span data-bind="pax-seats">1 seat</span>
+                      <span data-bind="pax-seats">{{ __('site.limo_cb_seat', ['count' => 1]) }}</span>
                     </span>
                     <span class="inline-flex items-center gap-2">
                       <svg class="h-5 w-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                         <rect x="6" y="7" width="12" height="12" rx="2" stroke-width="1.5" />
                         <path stroke-width="1.5" stroke-linecap="round" d="M9 7V5h6v2" />
                       </svg>
-                      1 Large Bag + 1 Small Bag
+                      {{ __('site.limo_cb_bags') }}
                     </span>
                   </div>
                 </div>
@@ -182,7 +182,7 @@
               <div class="mt-4 border-t border-slate-100 pt-3">
                 <p class="text-sm font-medium text-emerald-600">
                   <span class="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 align-middle"></span>
-                  Free cancellation up to 24 hours before your pick-up
+                  {{ __('site.limo_cb_free_cancel') }}
                 </p>
               </div>
             </div>
@@ -193,13 +193,13 @@
         <section data-cb-page="1" data-cb-flight-only class="mt-4 sm:mt-6" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">
           <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
             <label for="cb-flight-input-1" class="block text-sm font-semibold text-slate-900 sm:text-base">
-              Enter Arrival Flight Number
+              {{ __('site.limo_cb_flight_number_label') }}
             </label>
             <input
               id="cb-flight-input-1"
               type="text"
               autocomplete="off"
-              placeholder="e.g. BA777"
+              placeholder="{{ __('site.limo_cb_flight_placeholder') }}"
               class="mt-3 w-full rounded-xl border border-sky-200 bg-slate-50/80 px-4 py-3 text-sm text-slate-900 outline-none ring-0 transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 sm:text-base"
             />
             <div class="mt-6 flex justify-end">
@@ -208,7 +208,7 @@
                 data-cb-next
                 class="inline-flex items-center gap-2 rounded-full bg-[#1a2744] px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md transition hover:bg-[#243354] sm:px-10 sm:text-base"
               >
-                Next
+                {{ __('site.limo_cb_next') }}
                 <span aria-hidden="true" class="text-lg font-light">&gt;</span>
               </button>
             </div>
@@ -219,7 +219,7 @@
         <section data-cb-page="2" data-cb-flight-only class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="120">
           <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
             <label for="cb-flight-input-2" class="block text-sm font-semibold text-slate-900 sm:text-base">
-              Enter Arrival Flight Number
+              {{ __('site.limo_cb_flight_number_label') }}
             </label>
             <input
               id="cb-flight-input-2"
@@ -229,7 +229,7 @@
             />
             <p id="cb-flight-error-2" class="mt-2 hidden text-sm font-medium text-red-600" role="alert">
               <span class="mr-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-100 text-xs text-red-700" aria-hidden="true">!</span>
-              Please Enter a valid Flight Number
+              {{ __('site.limo_cb_invalid_flight') }}
             </p>
             <div class="mt-6 flex justify-end">
               <button
@@ -237,7 +237,7 @@
                 data-cb-next
                 class="inline-flex items-center gap-2 rounded-full bg-[#1a2744] px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md transition hover:bg-[#243354] sm:px-10 sm:text-base"
               >
-                Next
+                {{ __('site.limo_cb_next') }}
                 <span aria-hidden="true" class="text-lg font-light">&gt;</span>
               </button>
             </div>
@@ -248,8 +248,8 @@
         <section data-cb-page="3" class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="140">
           <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
             <div class="flex flex-col gap-2 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
-              <h2 data-cb-flight-only class="text-base font-bold text-slate-900 sm:text-lg">Flight Details</h2>
-              <h2 data-cb-city-only class="hidden text-base font-bold text-slate-900 sm:text-lg">Trip Details</h2>
+              <h2 data-cb-flight-only class="text-base font-bold text-slate-900 sm:text-lg">{{ __('site.limo_cb_step_flight') }}</h2>
+              <h2 data-cb-city-only class="hidden text-base font-bold text-slate-900 sm:text-lg">{{ __('site.limo_cb_step_trip') }}</h2>
               <p class="text-xs text-slate-600 sm:text-sm">
                 <span class="font-medium" data-bind="route-pickup">—</span>
                 <span class="mx-1 text-slate-400" aria-hidden="true">→</span>
@@ -258,25 +258,25 @@
             </div>
             <div data-cb-flight-only class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p class="text-sm text-slate-800">
-                Flight Number : <span class="font-semibold" data-bind="flight-number">—</span>
+                {{ __('site.limo_cb_flight_number_colon') }} <span class="font-semibold" data-bind="flight-number">—</span>
               </p>
             </div>
             <div class="mt-6 space-y-4">
               <div data-cb-flight-only>
-                <label for="cb-airline" class="block text-sm font-semibold text-slate-800">Airline</label>
+                <label for="cb-airline" class="block text-sm font-semibold text-slate-800">{{ __('site.limo_cb_airline') }}</label>
                 <input
                   id="cb-airline"
                   type="text"
                   class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base"
-                  placeholder="Airline name"
+                  placeholder="{{ __('site.limo_cb_airline_placeholder') }}"
                 />
                 <p id="cb-airline-error" class="mt-2 hidden text-sm font-medium text-red-600" role="alert">
-                  ⚠️ Please enter your airline
+                  ⚠️ {{ __('site.limo_cb_airline_required') }}
                 </p>
               </div>
               <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div>
-                  <label for="cb-pickup-time" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Pickup Time</label>
+                  <label for="cb-pickup-time" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">{{ __('site.limo_cb_pickup_time') }}</label>
                   <div class="relative">
                     <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">
                       <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -296,7 +296,7 @@
                   </div>
                 </div>
                 <div data-cb-flight-only>
-                  <label for="cb-terminal" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Terminal</label>
+                  <label for="cb-terminal" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">{{ __('site.limo_cb_terminal') }}</label>
                   <select
                     id="cb-terminal"
                     class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base"
@@ -307,7 +307,7 @@
                   </select>
                 </div>
                 <div>
-                  <label for="cb-pickup-date" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Confirm Pickup Date</label>
+                  <label for="cb-pickup-date" class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">{{ __('site.limo_cb_confirm_pickup_date') }}</label>
                   <div class="relative">
                     <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">
                       <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -331,7 +331,7 @@
                 data-cb-next
                 class="inline-flex items-center gap-2 rounded-full bg-[#1a2744] px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md transition hover:bg-[#243354] sm:px-10 sm:text-base"
               >
-                Next
+                {{ __('site.limo_cb_next') }}
                 <span aria-hidden="true" class="text-lg font-light">&gt;</span>
               </button>
             </div>
@@ -342,7 +342,7 @@
         <section data-cb-page="4" data-cb-flight-only class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="160">
           <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
             <div class="flex flex-col gap-2 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between">
-              <h2 class="text-base font-bold text-slate-900 sm:text-lg">Flight Details</h2>
+              <h2 class="text-base font-bold text-slate-900 sm:text-lg">{{ __('site.limo_cb_step_flight') }}</h2>
               <p class="text-xs text-slate-600 sm:text-sm">
                 <span data-bind="route-pickup">—</span>
                 <span class="mx-1" aria-hidden="true">→</span>
@@ -351,26 +351,26 @@
             </div>
             <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
               <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <h3 class="text-sm font-bold text-slate-900">Flight Details</h3>
+                <h3 class="text-sm font-bold text-slate-900">{{ __('site.limo_cb_step_flight') }}</h3>
               </div>
               <ul class="mt-3 space-y-1.5 text-sm text-slate-700">
-                <li>Flight Number: <span id="cb-summary-flight-num" class="font-medium">—</span></li>
-                <li>Airline: <span id="cb-summary-airline" class="font-medium">—</span></li>
+                <li>{{ __('site.limo_cb_flight_number_colon') }} <span id="cb-summary-flight-num" class="font-medium">—</span></li>
+                <li>{{ __('site.limo_cb_airline') }}: <span id="cb-summary-airline" class="font-medium">—</span></li>
                 <li>
-                  Arrival Date &amp; pickup Time:
+                  {{ __('site.limo_cb_arrival_datetime') }}
                   <span class="font-medium" data-bind="pickup-datetime"></span>
                 </li>
-                <li>Terminal: <span class="font-medium" data-bind="terminal">T1</span></li>
+                <li>{{ __('site.limo_cb_terminal') }}: <span class="font-medium" data-bind="terminal">T1</span></li>
               </ul>
             </div>
             <div class="mt-6">
-              <label for="cb-address-input" class="block text-sm font-semibold text-slate-900">Address In Details</label>
+              <label for="cb-address-input" class="block text-sm font-semibold text-slate-900">{{ __('site.limo_cb_address_details') }}</label>
               <input
                 id="cb-address-input"
                 type="text"
                 class="mt-2 w-full rounded-xl border border-sky-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base"
               />
-              <p class="mt-2 text-xs text-slate-500">Make sure your address is accurate and located in Cairo</p>
+              <p class="mt-2 text-xs text-slate-500">{{ __('site.limo_cb_address_hint') }}</p>
               
             </div>
             <div class="mt-6 flex justify-end">
@@ -379,7 +379,7 @@
                 data-cb-next
                 class="inline-flex items-center gap-2 rounded-full bg-[#1a2744] px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md transition hover:bg-[#243354] sm:px-10 sm:text-base"
               >
-                Next
+                {{ __('site.limo_cb_next') }}
                 <span aria-hidden="true" class="text-lg font-light">&gt;</span>
               </button>
             </div>
@@ -389,35 +389,35 @@
         <!-- 5: Contact form then passenger layout -->
         <section data-cb-page="5" class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="180">
           <div id="cb-page5-intro" class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-8">
-            <h2 class="text-lg font-bold text-slate-900 sm:text-xl">Your contact details</h2>
-            <p class="mt-1 text-sm text-slate-500">Please enter your name, email, phone, and nationality so we can complete your booking.</p>
+            <h2 class="text-lg font-bold text-slate-900 sm:text-xl">{{ __('site.limo_cb_contact_title') }}</h2>
+            <p class="mt-1 text-sm text-slate-500">{{ __('site.limo_cb_contact_sub') }}</p>
             <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div class="sm:col-span-2">
-                <label for="cb-contact-name" class="text-sm font-semibold text-slate-800">Name</label>
+                <label for="cb-contact-name" class="text-sm font-semibold text-slate-800">{{ __('site.name') }}</label>
                 <input
                   id="cb-contact-name"
                   type="text"
                   class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base"
                 />
-                <p id="cb-contact-err-name" class="mt-1 hidden text-sm text-red-600">Please enter your name.</p>
+                <p id="cb-contact-err-name" class="mt-1 hidden text-sm text-red-600">{{ __('site.limo_cb_err_name') }}</p>
               </div>
               <div>
-                <label for="cb-contact-email" class="text-sm font-semibold text-slate-800">Email</label>
+                <label for="cb-contact-email" class="text-sm font-semibold text-slate-800">{{ __('site.email') }}</label>
                 <input
                   id="cb-contact-email"
                   type="email"
                   class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base"
                 />
-                <p id="cb-contact-err-email" class="mt-1 hidden text-sm text-red-600">Please enter a valid email.</p>
+                <p id="cb-contact-err-email" class="mt-1 hidden text-sm text-red-600">{{ __('site.limo_cb_err_email') }}</p>
               </div>
               <div>
-                <label for="cb-contact-phone" class="text-sm font-semibold text-slate-800">Phone Number</label>
+                <label for="cb-contact-phone" class="text-sm font-semibold text-slate-800">{{ __('site.phone_number') }}</label>
                 <input
                   id="cb-contact-phone"
                   type="tel"
                   class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:text-base"
                 />
-                <p id="cb-contact-err-phone" class="mt-1 hidden text-sm text-red-600">Please enter a valid phone number.</p>
+                <p id="cb-contact-err-phone" class="mt-1 hidden text-sm text-red-600">{{ __('site.limo_cb_err_phone') }}</p>
               </div>
               <div class="sm:col-span-2">
                 <label for="cb-contact-nationality" class="text-sm font-semibold text-slate-800">{{ __('site.nationality') }}</label>
@@ -436,7 +436,7 @@
                 id="cb-send-contact"
                 class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-10 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-md transition hover:bg-emerald-700 sm:text-base"
               >
-                Send
+                {{ __('site.send') }}
               </button>
             </div>
           </div>
@@ -444,10 +444,10 @@
           <div id="cb-page5-main" class="hidden space-y-4" hidden>
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
               <div class="rounded-2xl border border-t-4 border-t-[#1a2744] border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
-                <h2 class="text-base font-bold text-slate-900 sm:text-lg">Booking Summary</h2>
+                <h2 class="text-base font-bold text-slate-900 sm:text-lg">{{ __('site.limo_cb_booking_summary') }}</h2>
                 <div class="mt-4 space-y-3 text-sm">
              
-                  <p class="text-xs uppercase tracking-wide text-slate-500">pick up</p>
+                  <p class="text-xs uppercase tracking-wide text-slate-500">{{ __('site.limo_cb_pickup_label') }}</p>
                   <p class="font-bold text-slate-900" data-bind="summary-pickup-line">—</p>
                   <p class="text-slate-500" data-bind="pickup-datetime"></p>
                   <div class="flex justify-center py-1 text-slate-400" aria-hidden="true">
@@ -455,22 +455,22 @@
                       <path stroke-linecap="round" stroke-width="2" d="M12 5v14m0 0l-4-4m4 4l4-4" />
                     </svg>
                   </div>
-                  <p class="text-xs uppercase tracking-wide text-slate-500" data-bind="summary-drop-heading">Drop-off</p>
+                  <p class="text-xs uppercase tracking-wide text-slate-500" data-bind="summary-drop-heading">{{ __('site.limo_cb_dropoff') }}</p>
                   <p class="font-bold text-slate-900" data-bind="summary-drop-title">—</p>
                   <p class="text-slate-500" data-bind="summary-drop-sub"></p>
                 </div>
                 <div class="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
-                  <span class="text-slate-600" data-bind="trip-price-label">One way trip price</span>
+                  <span class="text-slate-600" data-bind="trip-price-label">{{ __('site.limo_cb_one_way_trip_price') }}</span>
                   <span class="text-lg font-bold text-emerald-600" data-bind="vehicle-price">—</span>
                 </div>
               </div>
               <div class="flex flex-col gap-4">
                 <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
-                  <h2 class="text-base font-bold text-slate-900 sm:text-lg">Your info</h2>
+                  <h2 class="text-base font-bold text-slate-900 sm:text-lg">{{ __('site.limo_cb_your_info') }}</h2>
                   <dl class="mt-4 space-y-2 text-sm text-slate-700">
-                    <div><dt class="text-slate-500">Name</dt><dd id="cb-display-name" class="font-medium">—</dd></div>
-                    <div><dt class="text-slate-500">Email</dt><dd id="cb-display-email" class="font-medium">—</dd></div>
-                    <div><dt class="text-slate-500">Phone</dt><dd id="cb-display-phone" class="font-medium">—</dd></div>
+                    <div><dt class="text-slate-500">{{ __('site.name') }}</dt><dd id="cb-display-name" class="font-medium">—</dd></div>
+                    <div><dt class="text-slate-500">{{ __('site.email') }}</dt><dd id="cb-display-email" class="font-medium">—</dd></div>
+                    <div><dt class="text-slate-500">{{ __('site.phone_number') }}</dt><dd id="cb-display-phone" class="font-medium">—</dd></div>
                     <div><dt class="text-slate-500">{{ __('site.nationality') }}</dt><dd id="cb-display-nationality" class="font-medium">—</dd></div>
                   </dl>
                 </div>
@@ -479,7 +479,7 @@
                   data-cb-next
                   class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-4 text-base font-bold uppercase tracking-wide text-white shadow-lg transition hover:bg-emerald-700"
                 >
-                  Next
+                  {{ __('site.limo_cb_next') }}
                   <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
@@ -493,19 +493,19 @@
         <section data-cb-page="6" class="mt-4 hidden sm:mt-6" hidden data-aos="fade-up" data-aos-duration="700" data-aos-delay="200">
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
             <div class="order-1 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
-              <h2 class="text-base font-bold text-slate-900 sm:text-lg">Booking Summary</h2>
+              <h2 class="text-base font-bold text-slate-900 sm:text-lg">{{ __('site.limo_cb_booking_summary') }}</h2>
               <div class="mt-4 space-y-2 text-sm text-slate-700">
-                <p class="text-xs text-slate-500">pick up: <span data-bind="summary-pickup-line">—</span></p>
+                <p class="text-xs text-slate-500">{{ __('site.limo_cb_pickup_label') }}: <span data-bind="summary-pickup-line">—</span></p>
                 <p class="text-slate-600" data-bind="pickup-datetime"></p>
                 <div class="flex justify-center py-1 text-slate-400" aria-hidden="true">
                   <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-width="2" d="M12 5v14m0 0l-4-4m4 4l4-4" />
                   </svg>
                 </div>
-                <p class="text-xs text-slate-500"><span data-bind="summary-drop-heading">Drop-off</span>: <span data-bind="summary-drop-title">—</span><span data-bind="summary-drop-sub" class="text-slate-500"></span></p>
+                <p class="text-xs text-slate-500"><span data-bind="summary-drop-heading">{{ __('site.limo_cb_dropoff') }}</span>: <span data-bind="summary-drop-title">—</span><span data-bind="summary-drop-sub" class="text-slate-500"></span></p>
               </div>
               <div class="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
-                <span class="text-base font-bold text-slate-900">Final price</span>
+                <span class="text-base font-bold text-slate-900">{{ __('site.limo_cb_final_price') }}</span>
                 <span class="text-lg font-bold text-emerald-600" data-bind="price-total">—</span>
               </div>
             </div>
@@ -513,43 +513,42 @@
             <div class="order-2 space-y-4">
               <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
                 <div class="flex flex-wrap items-center justify-between gap-2">
-                  <h2 class="text-base font-bold text-slate-900 sm:text-lg">Your info</h2>
-                  <button type="button" class="text-sm font-medium text-blue-600 hover:underline">Edit your info</button>
+                  <h2 class="text-base font-bold text-slate-900 sm:text-lg">{{ __('site.limo_cb_your_info') }}</h2>
+                  <button type="button" class="text-sm font-medium text-blue-600 hover:underline">{{ __('site.limo_cb_edit_info') }}</button>
                 </div>
                 <dl class="mt-4 space-y-2 text-sm text-slate-700">
-                  <div><dt class="text-slate-500">Name</dt><dd class="font-medium" data-copy-name></dd></div>
-                  <div><dt class="text-slate-500">Email</dt><dd class="font-medium" data-copy-email></dd></div>
-                  <div><dt class="text-slate-500">Phone</dt><dd class="font-medium" data-copy-phone></dd></div>
+                  <div><dt class="text-slate-500">{{ __('site.name') }}</dt><dd class="font-medium" data-copy-name></dd></div>
+                  <div><dt class="text-slate-500">{{ __('site.email') }}</dt><dd class="font-medium" data-copy-email></dd></div>
+                  <div><dt class="text-slate-500">{{ __('site.phone_number') }}</dt><dd class="font-medium" data-copy-phone></dd></div>
                   <div><dt class="text-slate-500">{{ __('site.nationality') }}</dt><dd class="font-medium" data-copy-nationality></dd></div>
                 </dl>
-                <label for="cb-booking-notes" class="mt-4 block text-sm font-semibold text-slate-800">Booking Notes</label>
+                <label for="cb-booking-notes" class="mt-4 block text-sm font-semibold text-slate-800">{{ __('site.limo_cb_booking_notes') }}</label>
                 <textarea
                   id="cb-booking-notes"
                   rows="3"
                   class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                  placeholder="Optional notes for the driver"
+                  placeholder="{{ __('site.limo_cb_notes_placeholder') }}"
                 ></textarea>
               </div>
 
               <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-md sm:p-6">
-                <h2 class="text-base font-bold text-slate-900 sm:text-lg">Payment</h2>
+                <h2 class="text-base font-bold text-slate-900 sm:text-lg">{{ __('site.limo_cb_step_payment') }}</h2>
                 <div class="mt-4 rounded-xl border border-emerald-200/90 bg-emerald-50/60 p-4 sm:p-5">
-                  <p class="text-sm font-semibold text-emerald-900">Pay on arrival</p>
+                  <p class="text-sm font-semibold text-emerald-900">{{ __('site.limo_cb_pay_on_arrival') }}</p>
                   <p class="mt-2 text-sm leading-relaxed text-slate-700">
-                    No credit card is required to complete this booking. You will pay the total amount when you arrive
-                    (cash or as agreed with the operator).
+                    {{ __('site.limo_cb_pay_on_arrival_desc') }}
                   </p>
                 </div>
                 <label class="mt-6 flex cursor-pointer items-start gap-3 text-sm text-slate-700">
                   <input id="cb-terms" type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600" />
-                  <span>I accept all <a href="#" class="font-medium text-blue-600 underline">terms &amp; conditions</a></span>
+                  <span>{{ __('site.limo_cb_accept_terms') }} <a href="#" class="font-medium text-blue-600 underline">{{ __('site.limo_cb_terms_link') }}</a></span>
                 </label>
                 <button
                   type="button"
                   id="cb-book-submit"
                   class="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-4 text-base font-bold uppercase tracking-wide text-white shadow-lg transition hover:bg-emerald-700"
                 >
-                  Book
+                  {{ __('site.limo_cb_book') }}
                   <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>

@@ -28,6 +28,7 @@
 @endpush
 
 @push('js')
+    @include('site.limo.partials.limo_i18n')
     <script>
         window.LIMO_CITY_PRICES = @json($cityRidePrices ?? []);
         window.LIMO_CITY_ROUTE_RULES = @json($limoCityRouteRules ?? []);

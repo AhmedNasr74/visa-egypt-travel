@@ -34,16 +34,16 @@
               data-aos-once="true"
             >
               <p class="mb-3 text-sm font-normal text-white/90 md:text-base">
-                Are you frustrated by tedious car services?
+                {{ __('site.limo_hero_tagline') }}
               </p>
               <h1
                 class=" font-bold leading-tight tracking-tight text-white text-3xl lg:text-[2.65rem] xl:text-5xl"
               >
-                Revealing New Horizons of
+                {{ __('site.limo_hero_title_line1') }}
               </h1>
               <span
                 class="limo-accent-bg mt-2 inline-block rounded-sm px-1 py-0.5 font-bold text-white text-2xl  lg:text-[1.5rem] xl:text-[2rem]"
-                >Luxurious &amp; Eco-Friendly Rides</span
+                >{{ __('site.limo_hero_title_accent') }}</span
               >
             </div>
             <div
@@ -55,7 +55,7 @@
             >
               <img
                 src="{{ asset('assets/site/limo/image/visa/limo-hero.png') }}"
-                alt="Luxury electric sedan"
+                alt="{{ __('site.limo_hero_img_alt') }}"
                 class="pointer-events-none w-full select-none object-contain object-left-bottom drop-shadow-2xl"
                 width="900"
                 height="520"
@@ -102,7 +102,7 @@
                     width="24"
                     height="24"
                   />
-                  <span>Airport Transfer</span>
+                  <span>{{ __('site.limo_tab_airport') }}</span>
                 </button>
                 @endif
                 @if ($limoHasTravel)
@@ -121,7 +121,7 @@
                     width="24"
                     height="24"
                   />
-                  <span>Travel Limo</span>
+                  <span>{{ __('site.limo_tab_travel') }}</span>
                 </button>
                 @endif
                 @if ($limoHasCity)
@@ -140,7 +140,7 @@
                     width="24"
                     height="24"
                   />
-                  <span>City Ride </span>
+                  <span>{{ __('site.limo_tab_city') }}</span>
                 </button>
                 @endif
               </div>
@@ -155,7 +155,7 @@
                 @if ($limoDefaultTab !== 'airport') hidden @endif
               >
                 <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-                  <h2 class="text-lg font-bold text-gray-900">Book Airport Limo</h2>
+                  <h2 class="text-lg font-bold text-gray-900">{{ __('site.limo_book_airport') }}</h2>
                   <div class="flex items-center gap-4 text-sm">
                     <label
                       class="limo-trip-mode-label inline-flex cursor-pointer items-center gap-2"
@@ -169,7 +169,7 @@
                         class="trip-toggle h-4 w-4 border-gray-300 text-[var(--limo-color-primary)] focus:ring-[var(--limo-color-primary)]"
                         data-target="airport-return-date"
                       />
-                      <span class="text-gray-700">Round Trip</span>
+                      <span class="text-gray-700">{{ __('site.limo_round_trip') }}</span>
                     </label>
                     <label
                       class="limo-trip-mode-label inline-flex cursor-pointer items-center gap-2"
@@ -184,7 +184,7 @@
                         data-target="airport-return-date"
                         checked
                       />
-                      <span class="text-gray-700">One Way</span>
+                      <span class="text-gray-700">{{ __('site.limo_one_way') }}</span>
                     </label>
                   </div>
                 </div>
@@ -194,7 +194,7 @@
                     type="button"
                     id="airport-swap"
                     class="absolute left-0 top-[2.85rem] z-10 flex h-9 w-9 -translate-x-1 items-center justify-center rounded-md border border-gray-200 bg-white shadow-sm hover:bg-gray-50 sm:left-0"
-                    aria-label="Swap pickup and arrival"
+                    aria-label="{{ __('site.limo_swap_pickup_arrival') }}"
                   >
                     <img
                       src="{{ asset('assets/site/limo/image/visa/compare-arrows-sharp-24px.183610cd.png') }}"
@@ -206,7 +206,7 @@
                   </button>
 
                   <div class="ps-10 sm:ps-11">
-                    <label class="mb-1 block text-xs text-gray-500">Pickup From</label>
+                    <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_pickup_from') }}</label>
                     <div
                       class="flex overflow-hidden rounded-lg border border-gray-200 bg-white"
                     >
@@ -220,7 +220,7 @@
                           width="16"
                           height="16"
                         />
-                        <span>Airport</span>
+                        <span>{{ __('site.limo_airport_label') }}</span>
                       </div>
                       <select
                         id="airport-pickup-location-id"
@@ -237,7 +237,7 @@
                   </div>
 
                   <div class="ps-10 sm:ps-11">
-                    <label class="mb-1 block text-xs text-gray-500">Arrival To</label>
+                    <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_arrival_to') }}</label>
                     <div
                       class="flex overflow-hidden rounded-lg border border-gray-200 bg-white"
                     >
@@ -251,7 +251,7 @@
                           width="16"
                           height="16"
                         />
-                        <span>Address</span>
+                        <span>{{ __('site.limo_address_label') }}</span>
                       </div>
                       <select
                         id="airport-destination-location-id"
@@ -264,7 +264,7 @@
                   </div>
 
                   <div>
-                    <label class="mb-1 block text-xs text-gray-500">Pickup Date</label>
+                    <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_pickup_date') }}</label>
                     <div
                       class="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2.5"
                     >
@@ -284,7 +284,7 @@
                   </div>
 
                   <div id="airport-return-date" class="hidden">
-                    <label class="mb-1 block text-xs text-gray-500">Return Date</label>
+                    <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_return_date') }}</label>
                     <div
                       class="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2.5"
                     >
@@ -333,7 +333,7 @@
                     id="limo-btn-search-airport"
                     class="limo-primary-bg inline-flex items-center justify-center rounded-xl px-10 py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:opacity-95"
                   >
-                    Search
+                    {{ __('site.limo_search') }}
                   </button>
                 </div>
               </div>
@@ -349,7 +349,7 @@
                 @if ($limoDefaultTab !== 'travel') hidden @endif
               >
                 <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-                  <h2 class="text-lg font-bold text-gray-900">Book Travel Limo</h2>
+                  <h2 class="text-lg font-bold text-gray-900">{{ __('site.limo_book_travel') }}</h2>
                   <div class="flex items-center gap-4 text-sm">
                     <label
                       class="limo-trip-mode-label inline-flex cursor-pointer items-center gap-2"
@@ -363,7 +363,7 @@
                         class="trip-toggle h-4 w-4 border-gray-300 text-gray-900 focus:ring-gray-900"
                         data-target="travel-return-date"
                       />
-                      <span class="text-gray-700">Round Trip</span>
+                      <span class="text-gray-700">{{ __('site.limo_round_trip') }}</span>
                     </label>
                     <label
                       class="limo-trip-mode-label inline-flex cursor-pointer items-center gap-2"
@@ -378,14 +378,14 @@
                         data-target="travel-return-date"
                         checked
                       />
-                      <span class="text-gray-700">One Way</span>
+                      <span class="text-gray-700">{{ __('site.limo_one_way') }}</span>
                     </label>
                   </div>
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-2">
                   <div class="sm:col-span-1">
-                    <label class="mb-1 block text-xs text-gray-500">Travel From City</label>
+                    <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_travel_from_city') }}</label>
                     <div
                       class="flex overflow-hidden rounded-lg border border-gray-200 bg-white"
                     >
@@ -413,15 +413,15 @@
                     </div>
                   </div>
                   <div class="sm:col-span-1">
-                    <label class="mb-1 block text-xs text-gray-500">Choose Address</label>
+                    <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_choose_address') }}</label>
                     <input
                       type="text"
                       class="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:border-gray-300 focus:ring-1 focus:ring-gray-200"
-                      placeholder="Enter a Location"
+                      placeholder="{{ __('site.limo_enter_location') }}"
                     />
                   </div>
                   <div class="sm:col-span-1">
-                    <label class="mb-1 block text-xs text-gray-500">Travel To City</label>
+                    <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_travel_to_city') }}</label>
                     <div
                       class="flex overflow-hidden rounded-lg border border-gray-200 bg-white"
                     >
@@ -446,17 +446,17 @@
                     </div>
                   </div>
                   <div class="sm:col-span-1">
-                    <label class="mb-1 block text-xs text-gray-500">Choose Address</label>
+                    <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_choose_address') }}</label>
                     <input
                       type="text"
                       class="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:border-gray-300 focus:ring-1 focus:ring-gray-200"
-                      placeholder="Enter a Location"
+                      placeholder="{{ __('site.limo_enter_location') }}"
                     />
                   </div>
                 </div>
 
                 <div class="mt-3">
-                  <label class="mb-1 block text-xs text-gray-500">Pickup Date</label>
+                  <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_pickup_date') }}</label>
                   <div
                     class="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2.5"
                   >
@@ -476,7 +476,7 @@
                 </div>
 
                 <div id="travel-return-date" class="mt-3 hidden">
-                  <label class="mb-1 block text-xs text-gray-500">Return Date</label>
+                  <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_return_date') }}</label>
                   <div
                     class="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2.5"
                   >
@@ -524,7 +524,7 @@
                     id="limo-btn-search-travel"
                     class="limo-primary-bg-alt w-full rounded-xl py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:opacity-95 sm:w-auto sm:px-12"
                   >
-                    Search
+                    {{ __('site.limo_search') }}
                   </button>
                 </div>
               </div>
@@ -539,10 +539,10 @@
                 data-panel="city"
                 @if ($limoDefaultTab !== 'city') hidden @endif
               >
-                <h2 class="mb-4 text-lg font-bold text-gray-900">Book City Limo</h2>
+                <h2 class="mb-4 text-lg font-bold text-gray-900">{{ __('site.limo_book_city') }}</h2>
 
                 <div class="mb-4">
-                  <label class="mb-1 block text-xs text-gray-500">City</label>
+                  <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_city_label') }}</label>
                   <div class="inline-flex items-center gap-1 border-b border-dotted border-gray-800 pb-0.5">
                     <select
                       id="limo-city-location-id"
@@ -573,7 +573,7 @@
                   <p class="mt-1 text-xs text-gray-500">{{ __('site.limo_city_pax_price_hint') }}</p>
                 </div>
 
-                <p class="mb-2 text-xs font-medium text-gray-500">Choose Service</p>
+                <p class="mb-2 text-xs font-medium text-gray-500">{{ __('site.limo_choose_service') }}</p>
                 <div class="grid grid-cols-2 gap-2 sm:gap-3">
                   <label class="limo-service-card">
                     <input
@@ -588,7 +588,7 @@
                       aria-hidden="true"
                       >✓</span
                     >
-                    <span class="text-xs text-gray-500">Short Ride</span>
+                    <span class="text-xs text-gray-500">{{ __('site.limo_short_ride') }}</span>
                     <span class="limo-service-price text-sm font-bold text-gray-800">3 Hours</span>
                   </label>
                   <label class="limo-service-card">
@@ -598,7 +598,7 @@
                       aria-hidden="true"
                       >✓</span
                     >
-                    <span class="text-xs text-gray-500">Long Ride</span>
+                    <span class="text-xs text-gray-500">{{ __('site.limo_long_ride') }}</span>
                     <span class="limo-service-price text-sm font-bold text-gray-800">6 Hours</span>
                   </label>
                   <label class="limo-service-card">
@@ -608,7 +608,7 @@
                       aria-hidden="true"
                       >✓</span
                     >
-                    <span class="text-xs text-gray-500">Full Day Ride</span>
+                    <span class="text-xs text-gray-500">{{ __('site.limo_full_day_ride') }}</span>
                     <span class="limo-service-price text-sm font-bold text-gray-800">8 Hours</span>
                   </label>
                   <label class="limo-service-card">
@@ -618,7 +618,7 @@
                       aria-hidden="true"
                       >✓</span
                     >
-                    <span class="text-xs text-gray-500">Full Day Ride</span>
+                    <span class="text-xs text-gray-500">{{ __('site.limo_full_day_ride') }}</span>
                     <span class="limo-service-price text-sm font-bold leading-snug text-gray-800"
                       >12 Hours (Full Day)</span
                     >
@@ -626,7 +626,7 @@
                 </div>
 
                 <div class="mt-4">
-                  <label class="mb-1 block text-xs text-gray-500">Choose Pickup Date</label>
+                  <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_choose_pickup_date') }}</label>
                   <div
                     class="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2.5"
                   >
@@ -658,7 +658,7 @@
                     id="limo-btn-search-city"
                     class="limo-primary-bg-soft w-full rounded-xl py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:opacity-95 sm:w-auto sm:min-w-[140px] sm:px-8"
                   >
-                    Search
+                    {{ __('site.limo_search') }}
                   </button>
                 </div>
               </div>
@@ -685,10 +685,10 @@
             data-aos-once="true"
           >
             <h2 class="limo-heading text-xl font-bold uppercase tracking-wide">
-              visa Egypt Services
+              {{ __('site.limo_services_heading') }}
             </h2>
             <p class="limo-subheading mt-1 text-[30px] font-light leading-tight">
-              All Your Needs Fulfilled.
+              {{ __('site.limo_services_subheading') }}
             </p>
           </div>
 
@@ -707,8 +707,8 @@
                 width="56"
                 height="56"
               />
-              <h3 class="limo-title mt-3 text-xl font-semibold">Airport Limousine</h3>
-              <p class="limo-muted mt-1 text-sm">Get your luxury trip to &amp; from the airport</p>
+              <h3 class="limo-title mt-3 text-xl font-semibold">{{ __('site.limo_feat_airport_title') }}</h3>
+              <p class="limo-muted mt-1 text-sm">{{ __('site.limo_feat_airport_desc') }}</p>
             </article>
             <article
               class="flex flex-col items-center"
@@ -724,8 +724,8 @@
                 width="56"
                 height="56"
               />
-              <h3 class="limo-title mt-3 text-xl font-semibold">Travel in Style</h3>
-              <p class="limo-muted mt-1 text-sm">Travel with no worry about the road</p>
+              <h3 class="limo-title mt-3 text-xl font-semibold">{{ __('site.limo_feat_travel_title') }}</h3>
+              <p class="limo-muted mt-1 text-sm">{{ __('site.limo_feat_travel_desc') }}</p>
             </article>
             <article
               class="flex flex-col items-center"
@@ -741,8 +741,8 @@
                 width="56"
                 height="56"
               />
-              <h3 class="limo-title mt-3 text-xl font-semibold">Luxury City Ride</h3>
-              <p class="limo-muted mt-1 text-sm">Enjoy a comfortable ride around the city</p>
+              <h3 class="limo-title mt-3 text-xl font-semibold">{{ __('site.limo_feat_city_title') }}</h3>
+              <p class="limo-muted mt-1 text-sm">{{ __('site.limo_feat_city_desc') }}</p>
             </article>
           </div>
 
@@ -754,9 +754,7 @@
             data-aos-once="true"
           >
             <p class="mx-auto max-w-[760px] text-sm leading-relaxed md:text-base">
-              Enjoy an unparalleled experience from the moment you book your ride until you arrive at your
-              destination. Get the ride you deserve everywhere: from &amp; to airports, within the city,
-              or city to city with Visa.
+              {{ __('site.limo_info_blurb') }}
             </p>
           </div>
 
@@ -778,14 +776,14 @@
                 type="button"
                 id="open-video-overlay"
                 class="limo-play-bg limo-play-shadow absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white transition hover:scale-105"
-                aria-label="Play visa Egypt video"
+                aria-label="{{ __('site.limo_play_video') }}"
                 data-video-url="https://www.youtube.com/watch?v=mfxQy5A_tHs"
               >
                 <span class="ms-1 text-3xl">▶</span>
               </button>
               <div class="absolute bottom-6 left-6 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)] ">
-                <p class="text-2xl font-semibold leading-tight">Explore Visa</p>
-                <p class="text-sm">Watch Full Video</p>
+                <p class="text-2xl font-semibold leading-tight">{{ __('site.limo_explore_title') }}</p>
+                <p class="text-sm">{{ __('site.limo_explore_watch') }}</p>
               </div>
             </div>
           </div>
@@ -806,9 +804,9 @@
             data-aos-duration="750"
             data-aos-once="true"
           >
-            <h2 class="limo-heading text-2xl font-bold uppercase">visa Egypt Fleet</h2>
+            <h2 class="limo-heading text-2xl font-bold uppercase">{{ __('site.limo_fleet_heading') }}</h2>
             <p class="limo-subheading mt-1 text-[30px] font-light leading-tight">
-              Find The Ride That Matches Your Style
+              {{ __('site.limo_fleet_subheading') }}
             </p>
           </div>
 
@@ -825,9 +823,9 @@
     <div class="flex h-[220px] items-center justify-center rounded border border-gray-400 bg-white p-4">
       <img src="{{ asset('assets/site/limo/image/visa/Visacar5.png') }}" alt="Standard car" class="w-full object-contain" />
     </div>
-    <h3 class="limo-title mt-4 text-[31px] font-semibold">Standard</h3>
-    <p class="limo-muted text-sm">Toyota, KIA, or similar</p>
-    <p class="limo-muted text-sm font-semibold">3 Passengers</p>
+    <h3 class="limo-title mt-4 text-[31px] font-semibold">{{ __('site.limo_standard') }}</h3>
+    <p class="limo-muted text-sm">{{ __('site.limo_standard_desc') }}</p>
+    <p class="limo-muted text-sm font-semibold">{{ __('site.limo_passengers_count', ['count' => 3]) }}</p>
   </article>
 
   <!-- Premium -->
@@ -841,11 +839,11 @@
     <div class="flex h-[220px] items-center justify-center rounded border border-gray-400 bg-white p-4">
       <img src="{{ asset('assets/site/limo/image/visa/Visacar1.png') }}" alt="Premium car" class="w-full object-contain" />
     </div>
-    <h3 class="limo-title mt-4 text-[31px] font-semibold">Premium</h3>
+    <h3 class="limo-title mt-4 text-[31px] font-semibold">{{ __('site.limo_premium') }}</h3>
     <p class="limo-muted text-sm">
-      Toyota ACE 2024 &amp; 2025 or Similar
+      {{ __('site.limo_premium_desc') }}
     </p>
-    <p class="limo-muted text-sm font-semibold">6 Passengers</p>
+    <p class="limo-muted text-sm font-semibold">{{ __('site.limo_passengers_count', ['count' => 6]) }}</p>
   </article>
 
   <!-- Luxury -->
@@ -859,11 +857,11 @@
     <div class="flex h-[220px] items-center justify-center rounded border border-gray-400 bg-white p-4">
       <img src="{{ asset('assets/site/limo/image/visa/Visacar4.png') }}" alt="Luxury car" class="w-full object-contain" />
     </div>
-    <h3 class="limo-title mt-4 text-[31px] font-semibold">Luxury</h3>
+    <h3 class="limo-title mt-4 text-[31px] font-semibold">{{ __('site.limo_luxury') }}</h3>
     <p class="limo-muted text-sm">
-      Toyota Coaster 2024 &amp; 2025 or Similar
+      {{ __('site.limo_luxury_desc') }}
     </p>
-    <p class="limo-muted text-sm font-semibold">10 Passengers</p>
+    <p class="limo-muted text-sm font-semibold">{{ __('site.limo_passengers_count', ['count' => 10]) }}</p>
   </article>
 
 </div>
@@ -879,7 +877,7 @@
               type="button"
               class="rounded-full border border-[#1f1f24] px-8 py-3 text-sm font-bold uppercase tracking-wide text-[#1f1f24] transition hover:bg-[#1f1f24] hover:text-white"
             >
-              Explore Our Fleet
+              {{ __('site.limo_explore_fleet') }}
             </button>
           </div>
         </div>
@@ -910,12 +908,10 @@
               data-aos-duration="800"
               data-aos-once="true"
             >
-              <h3 class="text-3xl font-bold uppercase leading-none">Eco Friendly</h3>
-              <p class="mt-3 text-[1.1rem] font-semibold leading-none">Preserve the environment and Visa</p>
+              <h3 class="text-3xl font-bold uppercase leading-none">{{ __('site.limo_eco_title') }}</h3>
+              <p class="mt-3 text-[1.1rem] font-semibold leading-none">{{ __('site.limo_eco_sub') }}</p>
               <p class="mt-5 sm:text-x text-[1rem] text-white/95">
-                Clean living is a mandatory now more than ever. That’s why we are doing our part to reduce
-                the carbon footprint by providing eco-luxury vehicles. Elevate your luxury experience with
-                visa Egypt unique eco-friendly fleet.
+                {{ __('site.limo_eco_body') }}
               </p>
             </div>
           </div>
@@ -937,22 +933,21 @@
               data-aos-duration="800"
               data-aos-once="true"
             >
-              <p class="limo-heading text-2xl font-bold uppercase tracking-wide">About visa Egypt</p>
+              <p class="limo-heading text-2xl font-bold uppercase tracking-wide">{{ __('site.limo_about_heading') }}</p>
               <h3 class="limo-subheading mt-2 text-[30px] font-light leading-tight">
-                Powered by the continuous innovation urge
+                {{ __('site.limo_about_sub') }}
               </h3>
               <p class="limo-muted mt-4 text-[15px] leading-relaxed">
-                Enjoy the days you don't feel like driving yet you want the essence of luxurious rides.
+                {{ __('site.limo_about_p1') }}
               </p>
               <p class="limo-muted mt-4 text-[15px] leading-relaxed">
-                Creating a world of eco-friendly transportation that is luxurious in every detail. A member
-                of the visa Egypt Company Group.
+                {{ __('site.limo_about_p2') }}
               </p>
               <button
                 type="button"
                 class="mt-8 rounded-full border border-[#1f1f24] px-14 py-4 text-lg font-bold uppercase tracking-wide text-[#1f1f24] transition hover:bg-[#1f1f24] hover:text-white"
               >
-                Learn More
+                {{ __('site.limo_learn_more') }}
               </button>
             </div>
 
@@ -984,7 +979,7 @@
           type="button"
           id="close-video-overlay"
           class="absolute -top-11 right-0 flex h-9 w-9 items-center justify-center rounded-full bg-white text-2xl leading-none text-gray-900 shadow hover:bg-gray-100"
-          aria-label="Close video"
+          aria-label="{{ __('site.limo_close_video') }}"
         >
           ×
         </button>
@@ -993,7 +988,7 @@
             id="video-overlay-frame"
             class="aspect-video w-full"
             src=""
-            title="visa Egypt video"
+            title="{{ __('site.limo_video_title') }}"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
           ></iframe>

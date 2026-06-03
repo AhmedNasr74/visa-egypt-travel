@@ -1,4 +1,14 @@
 (function () {
+    var homeI18n =
+        typeof window.LIMO_HOME_I18N === "object" && window.LIMO_HOME_I18N !== null
+            ? window.LIMO_HOME_I18N
+            : {};
+
+    function homeT(key, fallback) {
+        var v = homeI18n[key];
+        return v != null && v !== "" ? v : fallback;
+    }
+
     var tabs = document.querySelectorAll(".limo-tab");
     var panels = document.querySelectorAll(".limo-panel");
     if (!tabs.length || !panels.length) return;
@@ -78,10 +88,10 @@
             ? window.LIMO_PRICE_MESSAGES
             : { unavailable: "—", noTier: "—" };
     var labels = {
-        "3": "3 Hours",
-        "6": "6 Hours",
-        "8": "8 Hours",
-        "12": "12 Hours (Full Day)"
+        "3": homeT("hours_3", "3 Hours"),
+        "6": homeT("hours_6", "6 Hours"),
+        "8": homeT("hours_8", "8 Hours"),
+        "12": homeT("hours_12", "12 Hours")
     };
 
     var LIMO_GLOBAL_MAX_PASSENGERS =
@@ -269,7 +279,7 @@
                 ? window.LIMO_LOCATION_LABELS
                 : {};
         var placeholder = selectEl.querySelector('option[value=""]');
-        var placeholderText = placeholder ? placeholder.textContent : "Please select";
+        var placeholderText = placeholder ? placeholder.textContent : homeT("please_select", "Please select");
         var prev = selectEl.value;
         selectEl.innerHTML = "";
         var emptyOpt = document.createElement("option");
@@ -279,7 +289,10 @@
         limoDestinationIdsForPickup(rules, serviceKey, pickupId).forEach(function (id) {
             var opt = document.createElement("option");
             opt.value = String(id);
-            opt.textContent = labels[id] || labels[String(id)] || "Location " + id;
+            opt.textContent =
+                labels[id] ||
+                labels[String(id)] ||
+                homeT("location_fallback", "Location :id").replace(":id", String(id));
             selectEl.appendChild(opt);
         });
         if (prev && selectEl.querySelector('option[value="' + prev + '"]')) {
@@ -678,7 +691,7 @@
                     }
                     var msg =
                         (result.data && (result.data.message || result.data.error)) ||
-                        "Something went wrong. Please try again.";
+                        homeT("generic_error", "Something went wrong. Please try again.");
                     if (errEl) {
                         errEl.textContent = msg;
                         errEl.classList.remove("hidden");
@@ -694,7 +707,7 @@
                         btn.disabled = false;
                         btn.textContent = originalText;
                     }
-                    var msg = "Network error. Please try again.";
+                    var msg = homeT("network", "Network error. Please try again.");
                     if (errEl) {
                         errEl.textContent = msg;
                         errEl.classList.remove("hidden");
