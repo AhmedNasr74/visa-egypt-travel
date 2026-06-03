@@ -15,7 +15,7 @@
 @endpush
 @section('content')
 <section id="makeTrip">
-    <form action="{{route('site.custom-trip-store')}}" method="post" id="custom-trip">
+    <form action="{{route('site.custom-trip-store')}}" method="post" id="custom-trip" novalidate>
         @csrf
 
         <section id="step-1" style="" class="">
@@ -392,10 +392,85 @@
                 });
             }
 
-            function markInvalidFields() {
-                form.querySelectorAll(':invalid').forEach(function (el) {
-                    el.classList.add('is-invalid');
+            function revealFieldForFocus(el) {
+                var node = el;
+                while (node && node !== form) {
+                    if (node.hidden) {
+                        node.hidden = false;
+                    }
+                    if (node.style && node.style.display === 'none') {
+                        node.style.display = '';
+                    }
+                    if (node.classList && node.classList.contains('d-none')) {
+                        node.classList.remove('d-none');
+                    }
+                    node = node.parentElement;
+                }
+            }
+
+            function fieldLabel(el) {
+                var group = el.closest('.col-12, .col-md-6, .col-md-4, .form-group, .inner');
+                if (group) {
+                    var label = group.querySelector('label');
+                    if (label && label.textContent) {
+                        return label.textContent.replace(/\*/g, '').trim();
+                    }
+                }
+                return el.name || 'Field';
+            }
+
+            function validateCustomTripForm() {
+                var checks = [
+                    { el: form.querySelector('[name="first_name"]'), test: function (el) { return !el.value.trim(); } },
+                    { el: form.querySelector('[name="email"]'), test: function (el) { return !el.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()); } },
+                    { el: form.querySelector('[name="date_from"]'), test: function (el) { return !el.value.trim(); } },
+                    { el: form.querySelector('[name="date_to"]'), test: function (el) { return !el.value.trim(); } },
+                    { el: form.querySelector('[name="nationality"]'), test: function (el) { return !el.value; } },
+                    { el: form.querySelector('[name="codePhone"]'), test: function (el) { return !el.value; } },
+                    { el: form.querySelector('[name="phone"]'), test: function (el) { return !el.value.trim(); } },
+                    { el: form.querySelector('[name="travel_to"]'), test: function (el) { return !el.value; } },
+                    { el: form.querySelector('[name="accommodation_choices"]'), test: function (el) { return !el.value; } },
+                    { el: form.querySelector('[name="note"]'), test: function (el) { return !el.value.trim(); } },
+                ];
+
+                var firstInvalid = null;
+                var firstLabel = '';
+
+                checks.forEach(function (item) {
+                    if (!item.el) {
+                        return;
+                    }
+                    item.el.classList.remove('is-invalid');
+                    if (item.test(item.el)) {
+                        item.el.classList.add('is-invalid');
+                        if (!firstInvalid) {
+                            firstInvalid = item.el;
+                            firstLabel = fieldLabel(item.el);
+                        }
+                    }
                 });
+
+                if (firstInvalid) {
+                    revealFieldForFocus(firstInvalid);
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    window.setTimeout(function () {
+                        try {
+                            firstInvalid.focus({ preventScroll: true });
+                        } catch (err) {
+                            firstInvalid.focus();
+                        }
+                    }, 350);
+                    var detailMsg = firstLabel
+                        ? firstLabel + ': ' + @json(__('site.this_field_is_required'))
+                        : msgRequired;
+                    showAlert(detailMsg, 'warning');
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning(detailMsg);
+                    }
+                    return false;
+                }
+
+                return true;
             }
 
             function getCsrfToken() {
@@ -443,22 +518,7 @@
                 hideAlert();
                 clearFieldErrors();
 
-                if (!form.checkValidity()) {
-                    markInvalidFields();
-                    form.reportValidity();
-                    const firstInvalid = form.querySelector(':invalid');
-                    if (firstInvalid) {
-                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        try {
-                            firstInvalid.focus({ preventScroll: true });
-                        } catch (err) {
-                            firstInvalid.focus();
-                        }
-                    }
-                    showAlert(msgRequired, 'warning');
-                    if (typeof toastr !== 'undefined') {
-                        toastr.warning(msgRequired);
-                    }
+                if (!validateCustomTripForm()) {
                     return;
                 }
 
