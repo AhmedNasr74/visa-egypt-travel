@@ -35,13 +35,11 @@
                     @endforelse
                 </div>
 
-                @if ($homeFaqs->isNotEmpty())
-                    <div class="mt-6">
-                        <a href="{{ route('site.faq') }}" class="mainBtn inline-block capitalize">
-                            {{ __('site.view_all_faqs') }}
-                        </a>
-                    </div>
-                @endif
+                <div class="mt-6">
+                    <a href="{{ route('site.faq') }}" class="mainBtn inline-block capitalize">
+                        {{ __('site.view_all_faqs') }}
+                    </a>
+                </div>
             </div>
 
             {{-- Contact form (right on desktop) --}}

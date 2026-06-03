@@ -63,7 +63,7 @@ class HomeController extends Controller
             })
             ->orderByDesc('important')
             ->orderByDesc('home')
-            ->limit(8)
+            ->limit(3)
             ->get();
 
         return view('site.home.index', compact(
