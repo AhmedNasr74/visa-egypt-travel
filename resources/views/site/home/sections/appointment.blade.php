@@ -9,7 +9,7 @@
     <div class="container">
         <div class="grid gap-6 grid-cols-1 md:grid-cols-[25%_minmax(0,1fr)]">
             <figure class="overflow-hidden relative" data-aos="fade-left">
-                <img src="https://magictravel.perfect-solution4u.com//storage/media/Make-tour.jpg"
+                <img src="https://visaegypttravel.com/storage/media/Make-tour.jpg"
                      class="w-80 h-90 imageAnimation"
                      style="border-radius: 10px;"
                      alt="">
