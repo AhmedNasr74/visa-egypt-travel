@@ -225,7 +225,7 @@
                       <select
                         id="airport-pickup-location-id"
                         name="airport_pickup_location_id"
-                        class="min-w-0 flex-1 border-0 bg-white py-2.5 pe-8 ps-3 text-sm text-gray-800 focus:ring-0"
+                        class="min-w-0 custom-select2 flex-1 border-0 bg-white py-2.5 pe-8 ps-3 text-sm text-gray-800 focus:ring-0"
                       >
                         @forelse ($limoAirportLocations as $loc)
                         <option value="{{ $loc->id }}" @selected($loop->first)>{{ $loc->name }}</option>
@@ -256,7 +256,7 @@
                       <select
                         id="airport-destination-location-id"
                         name="airport_destination_location_id"
-                        class="min-w-0 flex-1 border-0 bg-white py-2.5 pe-8 ps-3 text-sm text-gray-800 focus:ring-0"
+                        class="min-w-0 custom-select2 flex-1 border-0 bg-white py-2.5 pe-8 ps-3 text-sm text-gray-800 focus:ring-0"
                       >
                         <option value="">{{ __('site.please_select') }}</option>
                       </select>
@@ -543,7 +543,7 @@
 
                 <div class="mb-4">
                   <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_city_label') }}</label>
-                  <div class="inline-flex items-center gap-1 w-100 pb-0.5">
+                  <div class="city-ride-pickup inline-flex items-center gap-1 w-100 pb-0.5">
                     <select
                       id="limo-city-location-id"
                       name="city_pickup_location_id"

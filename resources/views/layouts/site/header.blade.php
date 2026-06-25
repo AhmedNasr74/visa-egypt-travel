@@ -74,6 +74,22 @@
         footer {
             overflow-x: hidden;
         }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            display: ruby-text;
+        }
+        .select2-container--default .select2-selection--single {
+            border: unset;
+            padding: 14px 0px;
+        }
+        .city-ride-pickup {
+            padding: .125rem 0;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+        .city-ride-pickup .select2-container--default .select2-selection--single {
+            /*border: 1px solid #e5e7eb;*/
+            margin-bottom: 8px;
+        }
     </style>
     <style>
         {!! setting(\App\Enums\SettingKey::CUSTOM_CSS->value, true) !!}
