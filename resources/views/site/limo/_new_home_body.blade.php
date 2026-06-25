@@ -543,11 +543,11 @@
 
                 <div class="mb-4">
                   <label class="mb-1 block text-xs text-gray-500">{{ __('site.limo_city_label') }}</label>
-                  <div class="inline-flex items-center gap-1 border-b border-dotted border-gray-800 pb-0.5">
+                  <div class="inline-flex items-center gap-1 w-100 pb-0.5">
                     <select
                       id="limo-city-location-id"
                       name="city_pickup_location_id"
-                      class="limo-city-select cursor-pointer border-0 bg-transparent p-0 pe-6 text-sm font-medium text-gray-900 focus:ring-0"
+                      class="w-100 custom-select2 limo-city-select cursor-pointer border-0 bg-transparent p-0 pe-6 text-sm font-medium text-gray-900 focus:ring-0"
                     >
                       @forelse ($limoCityLocations as $loc)
                       <option value="{{ $loc->id }}" @selected($loop->first)>{{ $loc->name }}</option>

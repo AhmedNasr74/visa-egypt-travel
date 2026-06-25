@@ -30,6 +30,7 @@
 @push('js')
     @include('site.limo.partials.limo_i18n')
     <script>
+        $('.custom-select2').select2()
         window.LIMO_CITY_PRICES = @json($cityRidePrices ?? []);
         window.LIMO_CITY_ROUTE_RULES = @json($limoCityRouteRules ?? []);
         window.LIMO_DEFAULT_TAB = @json($limoDefaultTab ?? 'airport');

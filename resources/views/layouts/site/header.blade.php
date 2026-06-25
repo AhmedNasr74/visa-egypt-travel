@@ -34,7 +34,7 @@
     {{--    <link rel="stylesheet" href="{{ asset('assets/site/css/jquery-ui.min.css') }}">--}}
     <!-- icons -->
     {{--    <link rel="stylesheet" href="{{ asset('assets/site/css/themify-icons.css') }}">--}}
-    {{--    <link rel="stylesheet" href="{{ asset('assets/site/css/select2.min.css') }}">--}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     {{--    <link rel="stylesheet" href="{{ asset('assets/site/css/jquery.timepicker.min.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('assets/site/css/bootstrap.min.css') }}">
 
@@ -67,6 +67,12 @@
             left: 0;
             top: 0;
             z-index: 999;
+        }
+        .custom-select2,.select2-container {
+            width: 100% !important;
+        }
+        footer {
+            overflow-x: hidden;
         }
     </style>
     <style>

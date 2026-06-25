@@ -379,9 +379,10 @@ class LimoController extends Controller
                 ->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)
                 ->values();
         }
+        $cols = $column === 'city_ride_limo' ? ['pickup_location_id'] :  ['pickup_location_id', 'destination_id'];
         $ids = CarRoute::query()
             ->where($column, true)
-            ->get(['pickup_location_id', 'destination_id'])
+            ->get($cols)
             ->flatMap(fn(CarRoute $r) => [$r->pickup_location_id, $r->destination_id])
             ->unique()
             ->filter()
